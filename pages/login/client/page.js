@@ -1,3 +1,5 @@
+"use client"
+
 import React,{use, useEffect,useState} from 'react'
 import checkAuthentication from '@/components/HOC/WithAuth'
 import { httpGET, httpPOST } from '@/service/network-configs/http/service'
@@ -15,6 +17,7 @@ import { generateToken } from '@/service/network-configs/http/generateToken';
 import Employees from '@/components/clientMenu/Employees';
 import Tasks from '@/components/clientMenu/Tasks';
 import Teams from '@/components/clientMenu/Teams';
+import { GenerateTemperaryLinkForFile } from '@/util/fileReader';
 const listData = [
     ["/images/svg/clientMenu/purple/1.svg","/images/svg/clientMenu/white/1.svg","Profile Info"],
     ["/images/svg/clientMenu/purple/2.svg","/images/svg/clientMenu/white/2.svg","Teams"],
@@ -57,14 +60,18 @@ const listData = [
   } 
   
 
+  const convertURI =  (imagePath) =>{
+
+   
+    console.log( GenerateTemperaryLinkForFile(imagePath));
+
+  }
 
 
 
 
 
   useEffect(() => {
-
-  
   
       async function getClient() {
          setLoading(true);
@@ -78,11 +85,14 @@ const listData = [
   
         console.log(headers, "hdrs");
         const response = await httpGET(BASE_URL + GET_CLIENT, headers);
-        console.log(response, "resp cccccccc");
+       
         if (response.status === 200) {
           setLoading(false);
           console.log(response.data, 'vvvvv X');
+          
+
           setDetails(response.data);
+       // setDetails(response.data);
           setLoading(false);
         } else if (response?.status === 400) {
           setLoading(false);
@@ -110,8 +120,6 @@ const listData = [
 
        getClient();
     
-
-
   }, []);
   return (
     <div style={{display:'flex',flexDirection:'column',width:'100vW',height:'100vh',alignItems:'center'}}>
@@ -127,12 +135,12 @@ const listData = [
                 </div>
                 <div style={{display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'space-around',columnGap:'10px'}}>
                     <label>{clientDetails?.owner}</label>
-                    <div style={{width:'35px',height:'35px',borderRadius:'100%',border:'2px solid gray',marginRight:'30px',backgroundImage:`uri(${clientDetails?.profileImageUri})`,backgroundRepeat:'no-repeat'}}/>
+                    <div style={{width:'35px',height:'35px',borderRadius:'100%',border:'2px solid gray',marginRight:'30px',backgroundRepeat:'no-repeat', backgroundSize: 'cover',backgroundImage:`url(data:image/png;base64,${clientDetails.profileImageUri})`}}>
+                     </div>
                 </div>
           </div>
         </div>
          
-        
         <div style={{width:'80vw',height:"95vh",display:'flex',alignItems:'end'}}>
              <div style={{width:'80vw',height:"85vh",display:'flex',flexDirection:'row',columnGap:'50px'}}>
                   <div style={{width:'250px',height:"85vh",display:'felx',flexDirection:'row'}}>

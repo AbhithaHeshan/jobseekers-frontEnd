@@ -20,13 +20,16 @@ export const requestConfig = (headers)=> {
 
 export const postRequestConfig = (headers,contentType)=> {
     
-    console.log(headers ,"      ", contentType);
-    
-    return {
-        headers:{...headers,
-            'Accept': 'application/json',
+    if (contentType === "application/json") {
+        return {
+          headers: {
+            ...headers,
             'Content-Type': contentType,
-        }
-
-    }
+          },
+        };
+      } else {
+        return {
+          headers: { ...headers },
+        };
+      }
 }

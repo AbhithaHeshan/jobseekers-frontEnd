@@ -36,6 +36,25 @@ export const httpPOST = async (url,data,contentType,headers) => {
             })
 }
 
+
+export const httpPOSTFormData = async (url,data,contentType,headers) => {
+    return  await axios.post(url,data,postRequestConfig(headers,contentType))
+         
+           .then((response) => {
+               return  handleSuccessPath(response)
+           })
+           .catch((error) => {
+               if(error.code === "ERR_NETWORK"){
+                   notify(notifyStatus.ERROR,"check your internet connection")
+               }else{
+                   return  handleErrorPath(error)
+               }
+              
+           })
+}
+
+
+
 export const httpGET = async (url,headers) => {
 
     return  await axios.get(url,requestConfig(headers))

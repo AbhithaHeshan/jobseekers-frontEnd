@@ -17,6 +17,7 @@ import { Oval } from 'react-loader-spinner';
 import Loarder from '@/components/Loarder';
 import { CONFIRM_PASSWORD, EMAIL, PASSWORD, TEXT, TEXT_NUMBER, USER_NAME } from '@/util/regXConstents';
 import { get_array_lendth_and_value_ok } from '@/util/arrayCheck';
+import axios from 'axios';
 
 
 const sliderMaxindex = 2;
@@ -76,12 +77,12 @@ export default function SignUp() {
 
             const file = event.target.files[0];
             const fileUri = URL.createObjectURL(file);
-            URL.revokeObjectURL(fileUri);
+            URL.revokeObjectURL(file);
 
             setBuinessRegPdfUri({value:fileUri,bool:false});
             console.log('File URI:', fileUri);
             const fileUrl = URL.createObjectURL(file);
-            setBuinessRegPdf({value:fileUrl,bool:false});
+            setBuinessRegPdf({value:file,bool:false});
           }catch(err){
               console.log(err)
           }
@@ -96,7 +97,7 @@ export default function SignUp() {
 
           setProfileUri({value:fileUri,bool:false});
           const fileUrl = URL.createObjectURL(file);
-          setProfileUrl({value:fileUrl,bool:false});
+          setProfileUrl({value:file,bool:false});
           console.log("URL: ", fileUrl);
         } catch (err) {
           console.log(err);
@@ -150,10 +151,17 @@ export default function SignUp() {
      
      }
 
+
+     async function convertBlobURLToBlob(blobURL) {
+      const response = await fetch(blobURL);
+      const blob = await response.blob();
+      return blob;
+    }
+
      async function  saveDetails(){
 
         setLoading(prev => !prev);
-        const clientDetails = JSON.stringify({
+        const clientDetails = {
             "owner": firstname.value + " " + lastname.value,
             "address": {
               "street": street.value,
@@ -163,25 +171,31 @@ export default function SignUp() {
             },
             "businessName": businessName.value,
             "businessType": buisnessType.value,
-            "businessRegistrationDocUri": buinessRegPdfUri.value,
-            "businessRegistrationNo": registrationName.value,
+            "businessRegistrationDocUri": "",
+            "businessRegistrationNo": "",
             "email": email.value,
             "tel": "null",
             "profileImageUri": profileUri.value,
             "userName": userName.value,
             "password": password.value
-          });
+          };
           
+
           const url = BASE_URL + NEW_CLIENT;
           
           const headers = {
-            'Role': 'CLIENT',
-            'Content-Type': 'application/json', 
-            'crossorigin': true,    
-            'mode': 'no-cors',       
+            'role': 'CLIENT',   
+      
           };
-           
-          const response = await httpPOST(url,clientDetails,'application/json',headers)    
+          const profile = await convertBlobURLToBlob(profileUri?.value)
+          const buinessReg = await convertBlobURLToBlob(buinessRegPdf?.value)
+
+          let bodyFormData = new FormData();
+          bodyFormData.append("client",JSON.stringify(clientDetails));
+          bodyFormData.append("profileImage" , profile  , ".png");
+          bodyFormData.append("businessDoc"  , buinessReg , ".pdf");
+
+          const response = await httpPOST(url,bodyFormData,'multipart/form-data',headers)    
           if(response?.status === 200){
                   setLoading(false);
                   setEmptyAllField();
@@ -199,9 +213,10 @@ export default function SignUp() {
                   setEmptyAllField();
           } 
              
-      }
-   
-     //disable = {get_array_lendth_and_value_ok(booleanValues)} 
+    }
+
+
+     //disable = {get_array_lendth_and_value_ok(booleanValues)}    //saveDetails() 
       const changeSlider = () =>{
            if(slideIndex === 0){
                  return  <Button title={"Create A New Account"} width={"50%"} height={"35px"} color={"white"}   backgroundColor={"#6149D8"}  onClick={()=>handleNextSlide()} />
@@ -209,7 +224,7 @@ export default function SignUp() {
                 return(
                     <div style={{width:'80%',display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
                         <Button title={"Previous"} width={"25%"} height={"25px"} color={"white"} backgroundColor={"#6149D8"} onClick={()=>handlePrevioustSlide()} />
-                        <Button title={"Register"} width={"25%"} height={"25px"} color={"white"} backgroundColor={"#6149D8"} onClick={(e)=>{handleNextSlide();  saveDetails() }} />  
+                        <Button title={"Register"} width={"25%"} height={"25px"} color={"white"} backgroundColor={"#6149D8"} onClick={(e)=>{handleNextSlide(); saveDetails() }} />      
                    </div>
                 )
            }else{

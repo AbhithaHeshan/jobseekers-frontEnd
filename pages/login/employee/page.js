@@ -1,8 +1,10 @@
-import React,{useRef,useState} from 'react'
+"use client"
+import React,{useRef,useState,useEffect} from 'react'
 import checkAuthentication from '@/components/HOC/WithAuth'
 import Image from 'next/image';
 import TextGroupContainer from '@/components/textGroupContainer';
 import MenuButton from '@/components/MenuButton';
+
  function Main() {
 
   const[visible,setVisible]= useState({visible:false,item:''})
@@ -10,7 +12,7 @@ import MenuButton from '@/components/MenuButton';
   const [profileUrl, setProfileUrl] = useState('')
   const handleClickProfile = () => {
     fileInputRefXT.current.click();
-};
+  }   ;
 
   function onChangeItems(){
     switch(visible.item){
@@ -32,7 +34,16 @@ const onChangeProfileImg = (event) => {
     } catch (err) {
       console.log(err);
     }
+
   };
+
+
+  useEffect(()=>{
+         
+  },[])
+  
+
+
   return (
     <div style={{display:'flex',flexDirection:'column',width:'100vw',height:'100vh',alignItems:'center'}}>
         <div className='box-shadow-type-one' style={{width:'100%',height:'45px',display:'flex',flexDirection:'row',justifyContent:'flex-end'}}>

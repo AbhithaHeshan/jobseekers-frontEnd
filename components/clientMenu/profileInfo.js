@@ -10,9 +10,10 @@ export default function ProfileInfo(props) {
     
 
       function address(){
+            console.log("DDDDDDDDDDD");
         if (props.props && props.props.address) {
             let { street, city, state, zipCode } = props.props.address;
-             
+          
             return street + "," +  city + "," + state +'\n'+ zipCode;
              
           } else {
@@ -48,8 +49,8 @@ export default function ProfileInfo(props) {
             </div>
             <div style={{display:'flex',flexDirection:'column',rowGap:'30px',alignItems:'start'}}>
                  <div style={{width:'100%',display:'flex',justifyContent:'center',position:'relative'}}>
-                        <div style={{backgroundImage:`url(${profileUrl})`,width:'80px',height:'80px',borderRadius:"100%",border:'2px solid gray', backgroundSize: 'cover',backgroundPosition: 'center'}}/>
-                        <div style={{ backgroundImage:`url('/images/common/uploadImage.png')`,width:'25px',height:'25px',backgroundRepeat:'no-repeat',cursor:'pointer',position:'absolute',bottom:'-5px',right:'0',left:'50px',margin:'auto', backgroundSize: 'cover', backgroundPosition: 'center',}} onClick={()=>handleClickProfile()} />
+                        <div style={{width:'80px',height:'80px',borderRadius:"100%",border:'2px solid gray', backgroundSize: 'cover',backgroundPosition: 'center', backgroundImage:`url(data:image/png;base64,${props.props.profileImageUri})`}}/>
+                        <div style={{width:'25px',height:'25px',backgroundRepeat:'no-repeat',cursor:'pointer',position:'absolute',bottom:'-5px',right:'0',left:'50px',margin:'auto', backgroundSize: 'cover', backgroundPosition: 'center', }} onClick={()=>handleClickProfile()} />
                         <input
                             id="fileInputProfile"
                             ref={fileInputRefX}
@@ -59,6 +60,7 @@ export default function ProfileInfo(props) {
                             style={{ display: 'none' }}
                         />
                  </div>
+        
                  <div style={{width:'50%',display:'flex',flexDirection:'column',rowGap:'15px',marginLeft:'50px'}}>
                           <div  style={{height:'50px',display:'flex',flexDirection:'row'}}>
                                 <TextGroupContainer topic={props.props.owner} subTopic={props.props.businessName} />

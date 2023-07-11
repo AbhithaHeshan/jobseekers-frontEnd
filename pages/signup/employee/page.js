@@ -19,6 +19,7 @@ import Loarder from '@/components/Loarder';
 import JobTypeDropDrown from '@/components/jobTypeDropDrown';
 import { CONFIRM_PASSWORD, EMAIL, PASSWORD, TEL, TEXT, TEXT_NUMBER, USER_NAME } from '@/util/regXConstents';
 import JobRoleType from '@/components/jobRoleType';
+import { getBlob } from '@/util/fileToBlobConverter';
 
 
 const sliderMaxindex = 2;
@@ -90,11 +91,14 @@ export default function SignUp() {
     
     };
 
+      
+
+
      async function  saveDetails(){
-        console.log(date ,"  ",jobType);
+
         setLoading(prev => !prev)
        
-        const employeeDetails = JSON.stringify({
+        const employeeDetails  = {
             "name": name.value,
             "address": {
               "street": street.value,
@@ -111,18 +115,23 @@ export default function SignUp() {
             "jobRoleType" : roleType.value,
             "userName": userName.value,
             "password": password.value
-          });
+          };
           
+          
+     
           const url = BASE_URL + NEW_EMPLOYEE;
           
           const headers = {
-            'Role': 'EMPLOYEE',
-            'Content-Type': 'application/json', 
-            'crossorigin': true,    
-            'mode': 'no-cors',       
+            'Role': 'EMPLOYEE',     
           };
-           
-          const response = await httpPOST(url,employeeDetails,'application/json',headers)
+            
+          const profile = await getBlob(profileUrl?.value)
+
+          let bodyFormData = new FormData();
+          bodyFormData.append("employee",JSON.stringify(employeeDetails));
+          bodyFormData.append("profileImage" , profile  , ".png");
+
+          const response = await httpPOST(url,bodyFormData,'multipart/form-data',headers)
         
           if(response?.status === 200){
                   setLoading(false)
@@ -132,10 +141,10 @@ export default function SignUp() {
                   }, 2500);
           }else if(response?.status === 400){
                   setLoading(false)
-                  notify(notifyStatus.ERROR,"Failed save employee please try again")
+                 // notify(notifyStatus.ERROR,"Failed save employee please try again")
           }else{  
                   setLoading(false)
-                  notify(notifyStatus.ERROR,"Failed save employee please try again")
+                 // notify(notifyStatus.ERROR,"Failed save employee please try again")
           }
             
       }
@@ -233,8 +242,6 @@ export default function SignUp() {
                                             />
                                            
                                     </div>
-                                   
-                                    
                             </div>   
                         </div>
                         
