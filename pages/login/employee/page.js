@@ -4,21 +4,44 @@ import checkAuthentication from '@/components/HOC/WithAuth'
 import Image from 'next/image';
 import TextGroupContainer from '@/components/textGroupContainer';
 import MenuButton from '@/components/MenuButton';
-
+import { GET_EMPLOYEE } from '@/service/api-endpoints/employee';
+import Loarder from '@/components/Loarder';
+import Toaster from '@/components/Toaster';
+import { getUserCredentialsFromLocalStorage } from '@/util/storage';
+import { httpGET } from '@/service/network-configs/http/service';
+import { BASE_URL } from '@/service/network-configs/http/basicConfig';
+import { useRouter } from 'next/navigation';
  function Main() {
+
 
   const[visible,setVisible]= useState({visible:false,item:''})
   const fileInputRefXT = useRef(null);
   const [profileUrl, setProfileUrl] = useState('')
+  const [userDetails,setDetails] = useState({});
+  const [isLoading,setLoading] = useState(false);
+  const router = useRouter();
+
   const handleClickProfile = () => {
     fileInputRefXT.current.click();
-  }   ;
+  };
 
   function onChangeItems(){
     switch(visible.item){
       case "viewAll" : return "view all employees of the client have";
       case "viewTeam" : return "view all employees of the client have as a teams ex- according to Hotel hotel has waiters,managers,cheff";
       default : "dsd";
+    }
+  }
+
+  function address(){
+    console.log("DDDDDDDDDDD");
+  if (userDetails.address) {
+      let { street, city, state, zipCode } = userDetails.address;
+    
+      return street + "," +  city + "," + state +'\n'+ zipCode;
+      
+    } else {
+      return "street" + "," +  "city" + "," + "state" +'\n'+ "zipCode";
     }
   }
 
@@ -39,7 +62,37 @@ const onChangeProfileImg = (event) => {
 
 
   useEffect(()=>{
-         
+
+        async function getClient() {
+
+          setLoading(true);
+          const { access_token, refresh_token, userRole, userId } = getUserCredentialsFromLocalStorage();
+          console.log(access_token, '\n', userId, '\n', userRole, '///');
+          const headers = {
+          'Authorization': `Bearer ${access_token}`,
+          'userId': userId,
+          'role': userRole,
+          };
+  
+        const response = await httpGET(BASE_URL + GET_EMPLOYEE, headers);
+        
+        if (response.status === 200) {
+          setLoading(false);
+          setDetails(response.data);
+          setLoading(false);
+        } else if (response?.status === 400) {
+          setLoading(false);
+          notify(notifyStatus.ERROR, response.message);
+        } else if (response?.status === 401) {
+              setLoading(false);
+        } else {
+          notify(notifyStatus.ERROR, response.message);
+          setLoading(false);
+        }
+
+      }
+  
+    getClient();
   },[])
   
 
@@ -63,9 +116,9 @@ const onChangeProfileImg = (event) => {
                           <li>Tasks</li>
                           <li>Earns</li>
                         </ul>
-                    <label>{"user name"}</label>
+                    <label>{userDetails.name}</label>
           
-                    <div style={{width:'35px',height:'35px',borderRadius:'100%',border:'2px solid gray',marginRight:'30px',backgroundImage:`uri(${"clientDetails?.profileImageUri"})`,backgroundRepeat:'no-repeat'}}/>
+                    <div style={{width:'35px',height:'35px',borderRadius:'100%',border:'2px solid gray',marginRight:'30px',backgroundSize: 'cover',backgroundImage:`url(data:image/png;base64,${userDetails.profileImageUri})`,backgroundRepeat:'no-repeat'}}/>
                 </div>
           </div>
         </div>
@@ -76,7 +129,7 @@ const onChangeProfileImg = (event) => {
                              
                             <div style={{width:'230px',height:'90vh',display:'flex',flexDirection:'column',rowGap:'20px',alignItems:'center'}}>
                                <div style={{width:'100%',display:'flex',justifyContent:'center',position:'relative'}}>
-                                 <div style={{backgroundImage:`url(${"profileUrl"})`,width:'80px',height:'80px',borderRadius:"100%",border:'2px solid gray', backgroundSize: 'cover',backgroundPosition: 'center'}}/>
+                                 <div style={{backgroundImage:`url(data:image/png;base64,${userDetails.profileImageUri})`,width:'80px',height:'80px',borderRadius:"100%",border:'2px solid gray', backgroundSize: 'cover',backgroundPosition: 'center'}}/>
                                  <div style={{ backgroundImage:`url('/images/common/uploadImage.png')`,width:'25px',height:'25px',backgroundRepeat:'no-repeat',cursor:'pointer',position:'absolute',bottom:'-5px',right:'0',left:'50px',margin:'auto', backgroundSize: 'cover', backgroundPosition: 'center',}} onClick={()=>handleClickProfile()} />
                                     <input
                                         id="fileInputProfile"
@@ -87,14 +140,15 @@ const onChangeProfileImg = (event) => {
                                         style={{ display: 'none' }}
                                     />
                                 </div>
-                                <TextGroupContainer topic={"Name"} subTopic={"Kamal"} width={"200px"}/>
-                                <TextGroupContainer topic={"Eddress"} subTopic={"Kamal"} width={"200px"}/>
-                                <TextGroupContainer topic={"Email"} subTopic={"asd@gmail.com"} width={"200px"}/>
-                                <TextGroupContainer topic={"Tel"} subTopic={"+94123456"} width={"200px"}/>
-                                <TextGroupContainer topic={"Working Type"} subTopic={"online"} width={"200px"} />
-                                <TextGroupContainer topic={"Job Type"} subTopic={"Tnformation Technology"} width={"200px"}/>
-                                <TextGroupContainer topic={"Catogary Type"} subTopic={"Grapgic designer"} width={"200px"}/>
+                                <TextGroupContainer topic={"Name"} subTopic={userDetails.name} width={"200px"}/>
+                                <TextGroupContainer topic={"Eddress"} subTopic={address()} width={"200px"}/>
+                                <TextGroupContainer topic={"Email"} subTopic={userDetails.email} width={"200px"}/>
+                                <TextGroupContainer topic={"Tel"} subTopic={userDetails.tel} width={"200px"}/>
+                                <TextGroupContainer topic={"Working Type"} subTopic={userDetails.workingType} width={"200px"} />
+                                <TextGroupContainer topic={"Job Type"} subTopic={userDetails.jobType} width={"200px"}/>
+                                <TextGroupContainer topic={"Catogary Type"} subTopic={userDetails.jobRoleType} width={"200px"}/>
                             </div>
+              
                 </div>
                 <div style={{width:'89vw',borderRadius:'10px',margin:'5px'}}>
                      <div style={{height:'100px',display:'flex',flexDirection:'row',columnGap:'10px'}}> 
@@ -105,6 +159,9 @@ const onChangeProfileImg = (event) => {
 
                 </div>
         </div>
+
+         <Loarder  visible={isLoading} />
+         <Toaster/>
 
     </div>
   )

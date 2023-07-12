@@ -22,7 +22,7 @@ export default function ViewAds() {
                        console.log("response.data")
                        setData(response?.data)
             }else if (response?.status == 400){
-                       notify(notifyStatus.ERROR,response.message)
+                  //  notify(notifyStatus.ERROR,response.message)
             }else if (response?.status >= 403){
                 notify(notifyStatus.ERROR,"ddd")
             }

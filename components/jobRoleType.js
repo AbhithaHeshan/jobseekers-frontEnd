@@ -19,7 +19,7 @@ export default function JobRoleType(props) {
                      console.log("response.data")
                      setData(response?.data)
           }else if (response?.status >= 400){
-                     notify(notifyStatus.ERROR,response.message)
+                     //notify(notifyStatus.ERROR,response.message)
           }else if (response?.status >= 403){
 
           }

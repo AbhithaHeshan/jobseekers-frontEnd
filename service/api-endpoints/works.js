@@ -1,0 +1,1 @@
+export const CREATE_NEW_WORKS = "works/create/new/works"

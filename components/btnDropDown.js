@@ -15,6 +15,7 @@ export default function BtnDropDown(props) {
 
      const [data, setData] = useState([]);
     console.log(props);
+    
      useEffect(()=>{
 
        async function  getAll(){
@@ -24,7 +25,7 @@ export default function BtnDropDown(props) {
                       console.log("response.data")
                       setData(response?.data)
            }else if (response?.status >= 400){
-                      notify(notifyStatus.ERROR,response.message)
+                     // notify(notifyStatus.ERROR,response.message)
            }else if (response?.status >= 403){
          
            }

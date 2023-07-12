@@ -3,13 +3,16 @@ import Image from 'next/image'
 import MenuButton from '../MenuButton'
 import TransparentScreen from '../TransparentScreen'
 import CreateAds from './clientSubMenus/createAds'
+import CreateWorks from './clientSubMenus/createWorkForEmployee'
+import AllTasks from './clientSubMenus/allTasks'
+
 export default function Tasks() {
   const[visible,setVisible]= useState({visible:false,item:''})
 
   function onChangeItems(){
     switch(visible.item){
-      case "newTask" : return "Give task( job ) for the registed Employee . includs job catagory(graphic designer, cleark ,developer) , non task employee details each job catogar , start date & time , end date & time, task subbmited time ,  )";
-      case "all" : return "view all giving tasks";
+      case "newTask" : return <CreateWorks />;
+      case "all" : return <AllTasks/>;
       case "deadlines" : return "view dead lines of the tasks with each employees";
       case "assigned" : return "view  the employee completed tasks it inclds strt date,end date,employee details , task per rate (rs) ,  ";
       default : "dsd";

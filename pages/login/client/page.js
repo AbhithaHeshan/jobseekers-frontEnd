@@ -26,11 +26,6 @@ const listData = [
     ["/images/svg/clientMenu/purple/5.svg","/images/svg/clientMenu/white/5.svg","Advertiestments"],
 ]
 
-
-
-
-
-
  function Main() {
 
   const [selectedIndex, setSelectedIndex] = useState(0)
@@ -42,6 +37,7 @@ const listData = [
   
   const onChangeView  = (index) =>{
          
+
           switch(index){
                case 0 :
                 return(<ProfileInfo props={clientDetails}/>);break;
@@ -113,7 +109,7 @@ const listData = [
              console.log(responseD , "/................../");
               setLoading(false);
         } else {
-          notify(notifyStatus.ERROR, response.message);
+          //notify(notifyStatus.ERROR, response.message);
           setLoading(false);
         }
       }
