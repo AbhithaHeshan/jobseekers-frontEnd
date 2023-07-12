@@ -26,8 +26,8 @@ export default function Tasks() {
          <div style={{height:'100px',display:'flex',flexDirection:'row',columnGap:'10px'}}>
              <MenuButton  title={"Create New Task"} imageUrl={"/images/common/new.png"}       backgroundColor={"#F2EFFE"} onClick={()=>{setVisible({visible:true,item:'newTask'}) }} />
              <MenuButton  title={"All Tasks"}       imageUrl={"/images/common/tasks.png"}     backgroundColor={"#F2EFFE"} onClick={()=>{setVisible({visible:true,item:'all'}) }} />
-             <MenuButton  title={"DeadLines"}       imageUrl={"/images/common/deadlines.png"} backgroundColor={"#F2EFFE"} onClick={()=>{setVisible({visible:true,item:'deadlines'}) }}/>
-             <MenuButton  title={"Assigned"}        imageUrl={"/images/common/completed.png"} backgroundColor={"#F2EFFE"} onClick={()=>{setVisible({visible:true,item:'assigned'}) }}/>
+             {/* <MenuButton  title={"DeadLines"}       imageUrl={"/images/common/deadlines.png"} backgroundColor={"#F2EFFE"} onClick={()=>{setVisible({visible:true,item:'deadlines'}) }}/>
+             <MenuButton  title={"Assigned"}        imageUrl={"/images/common/completed.png"} backgroundColor={"#F2EFFE"} onClick={()=>{setVisible({visible:true,item:'assigned'}) }}/> */}
           
          </div>
          <TransparentScreen onClick={()=>{setVisible({visible:false,item:''})}}  visible={visible.visible}>

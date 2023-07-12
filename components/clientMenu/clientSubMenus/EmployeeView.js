@@ -1,5 +1,5 @@
 import { GET_WORKKS_BY, MARK_AS_READ } from '@/service/api-endpoints/works';
-import { getEmployeesForClient } from '@/service/common/getAllRegisteredEmployees';
+import { getAvailaleEmployeesX, getEmployeesForClient } from '@/service/common/getAllRegisteredEmployees';
 import { BASE_URL } from '@/service/network-configs/http/basicConfig';
 import { httpGET } from '@/service/network-configs/http/service';
 import { notify, notifyStatus } from '@/util/notify';
@@ -15,7 +15,7 @@ const filterStatus = [
      "Submitted","Pending","Cancel","Read"
 ]
 
-export default function AllTasks() {
+export default function EmployeeView() {
       const[allEmployees,setAllEmployees] = useState([]);
       const[category,setCategorys] = useState([]);
       const[name,setNames] = useState([]);
@@ -55,8 +55,6 @@ export default function AllTasks() {
   
    async function setAsRead(){
 
-                  
-
                     const header = {
                             "jobId" : workId,
                     }
@@ -73,22 +71,24 @@ export default function AllTasks() {
                             
    }
    
+    function getEmployees(){
+        getEmployeesForClient().then((data)=>{
+            const{allEmployees,onlyCatogaries,onlyEmployees} = data ;
+   
+                setAllEmployees(allEmployees)
+                setCategorys(onlyCatogaries);
+                setNames(onlyEmployees);
+        
+       }).catch((err)=>{
+         console.log(err);
+       })
+    }
+
 
     useEffect(()=>{
-    
-       getAll("All","All")
-
-        getEmployeesForClient().then((data)=>{
-                const{allEmployees,onlyCatogaries,onlyEmployees} = data ;
-       
-                    setAllEmployees(allEmployees)
-                    setCategorys(onlyCatogaries);
-                    setNames(onlyEmployees);
-
-        }).catch((err)=>{
-             console.log(err);
-        })
-       
+      
+        getEmployees();
+   
      },[])
 
 
@@ -110,19 +110,30 @@ export default function AllTasks() {
                 <div style={{width:'100%',height:"50px",marginTop:'10px'}}>
                         
                         <div style={{display: 'flex', flexDirection: 'row'}}>
-                            <select className='box-shadow-type-one' style={{borderRadius:'10px',width:  '15%',paddingLeft:'10px',height:"40px",margin:'10px'}} onChange={(e)=>{ setSelectedRole(e.target.value);getAll(e.target.value,filterStatusValue)}} >
-                                <option style={{fontSize:'12px' , width:'20%' , paddingLeft:'20px'}} value={"All"}  selected>All</option>
+                            <select className='box-shadow-type-one' style={{borderRadius:'10px',width:  '15%',paddingLeft:'10px',height:"40px",margin:'10px'}} onChange={(e)=>{
+                                
+                                   setSelectedRole(e.target.value);
+
+                                   if(e.target.value === "All"){
+                                       getEmployees();
+                                   }else{
+                                        getEmployeesForClient().then((data)=>{
+                                            const{allEmployees,onlyCatogaries,onlyEmployees} = data ;
+                                
+                                                setAllEmployees(allEmployees)
+                                                setAllEmployees(getAvailaleEmployeesX(e?.target?.value,allEmployees))
+                                        
+                                    }).catch((err)=>{
+                                        console.log(err);
+                                    })
+                                    
+
+                                   }  
+
+                             }} >
+                                   <option style={{fontSize:'12px' , width:'20%' , paddingLeft:'20px'}} value={"All"} selected>All</option>
                                 { 
                                      category.map((item, index) => (
-                                         <option style={{fontSize:'12px' , width:'100%' , paddingLeft:'20px'}} value={item}  key={index}>{item}</option>
-                                     ))      
-                                }  
-                            </select>
-
-                            <select className='box-shadow-type-one' style={{borderRadius:'10px',width:  '15%',paddingLeft:'10px',height:"40px",margin:'10px'}} onChange={(e)=>{ setFilterStatusValue(e.target.value);getAll(selectedRole,e.target.value)}} >
-                                <option style={{fontSize:'12px' , width:'20%' , paddingLeft:'20px'}} selected>All</option>
-                                { 
-                                     filterStatus.map((item, index) => (
                                          <option style={{fontSize:'12px' , width:'100%' , paddingLeft:'20px'}} value={item}  key={index}>{item}</option>
                                      ))      
                                 }  
@@ -136,20 +147,21 @@ export default function AllTasks() {
                             
 
                              {
-                                respDetails?.map((data,index)=>{
-                                     
+                                allEmployees?.map((data,index)=>{
+                                      console.log(data , " vvvvvv ");
                                     return(
-                                        <div className='box-shadow-type-two' style={{ width:'50%',height:"90px",marginTop:'10px',display:'flex',flexDirection:'column',borderRadius:'10px'}} onClick={()=>{setDetails(data);setHideButton(data?.workStatus === "Submitted");setWorkId(data?.jobId)}}>
-                                                <div style={{ width:'100%',height:"30px",marginTop:'10px',display:'flex',flexDirection:'column',paddingLeft:'20px'}}>
-                                                    <label style={{fontSize:'20px',fontWeight:'500'}}>{data.workInfo.title}</label>   
+                                        <div className='box-shadow-type-two' style={{ width:'300px',height:"90px",marginTop:'10px',display:'flex',flexDirection:'row',borderRadius:'10px',alignItems:'center'}} onClick={()=>{setDetails(data);setHideButton(data?.workStatus === "Submitted");setWorkId(data?.jobId)}}>
+                                              <div style={{display:'flex',flexDirection:'column',width:"80%"}}>
+                                                  <div style={{ width:'100%',height:"30px",marginTop:'10px',display:'flex',flexDirection:'column',paddingLeft:'20px'}}>
+                                                    <label style={{fontSize:'20px',fontWeight:'500'}}>{data.name}</label>   
+                                                  </div>
+                                                <div style={{width:'100%',height:"30px",marginTop:'10px',display:'flex',flexDirection:'column',justifyContent:"space-between",alignItems:'center'}}>                                      
+                                                         <label>{data.jobType}</label>  
                                                 </div>
-                                                <div style={{width:'100%',height:"30px",marginTop:'10px',display:'flex',flexDirection:'row',justifyContent:"space-between",alignItems:'center'}}>
-                                                    <label style={{marginLeft:'20px',fontSize:'12px'}}>{data.workInfo.description}</label>
-                                                    <div style={{display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'center',columnGap:'10px',marginRight:'10px'}}>
-                                                        <label>{data.workStatus}</label>
-                                                        <div style={{width:'10px',height:'10px',borderRadius:"100%",backgroundColor:statusColor(data.workStatus)}}/>
-                                                    </div>
-                                                </div>
+
+                                              </div>
+
+                                                <div  style={{width:'50px',height:'50px',borderRadius:'100%',backgroundSize: 'cover',backgroundPosition: 'center', backgroundImage:`url(data:image/png;base64,${data?.profileImageUri})`}}  />  
                                          </div>
                                     )
                                 })

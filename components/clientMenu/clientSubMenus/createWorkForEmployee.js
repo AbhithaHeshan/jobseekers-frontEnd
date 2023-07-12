@@ -271,7 +271,7 @@ export default function CreateWorks() {
                                     ref={fileInputRef3}
                                     type="file"
                                     onChange={handleFileChangeDoc}
-                                    accept="application/pdf"
+                                    accept="image/png, image/jpeg"
                                     style={{ display: 'none' }}
                                 />
 

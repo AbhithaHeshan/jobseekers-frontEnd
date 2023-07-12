@@ -15,7 +15,11 @@ import { httpGET } from "../network-configs/http/service";
     })   
 
     return arr;
-    }
+  }
+
+  
+
+
 
   function filterCatogaries(details){
     const arr =  new Array();
@@ -24,7 +28,8 @@ import { httpGET } from "../network-configs/http/service";
     }) 
     console.log(arr , " cccccccccccccccccc");
     return arr;
-    }
+
+   }
 
 
   function allEmployees(details){
@@ -37,6 +42,12 @@ import { httpGET } from "../network-configs/http/service";
          return  details.filter(detail => detail.jobRoleType === type).map(detail => ({ name: detail.name, userId: detail.userId }));
 
   } 
+
+  export function getAvailaleEmployeesX(type,details){
+
+    return  details.filter(detail => detail.jobRoleType === type).map(detail => detail);
+
+} 
 
 export async function  getEmployeesForClient(){
 
