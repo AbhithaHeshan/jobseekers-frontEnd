@@ -20,8 +20,8 @@ export default function CreateAds() {
     const [hoverlyRate, setHoverlyRate] = useState({value: '', bool: false});
     const [experienceLevel, setExperienceLevel] = useState({value: '', bool: false});
     const [description, setDescription] = useState({value: '', bool: false});
-    const [date, setDate] = useState({value: '', bool: false});
-    const [toDate, setToDate] = useState({value: '', bool: false});
+    const [date, setDate] = useState('');
+    const [toDate, setToDate] = useState('');
     const [jobRoleType, setJobRoleType] = useState('');
     const [isLoading,setLoading] = useState(false);
 
@@ -197,7 +197,7 @@ export default function CreateAds() {
                         <div style={{display: 'flex', flexDirection: 'column'}}>
                             <label style={{fontFamily: 'inter', fontSize: '13px'}}>Expired Date</label>
                             <input type='date' style={{width: '420px', borderRadius: '10px', height: '45px'}}
-                                   className='box-shadow-type-one' placeholder='date of birth' value={date}
+                                   className='box-shadow-type-one' placeholder='date of birth' value={toDate}
                                    onChange={(e) => {
                                        console.log(e)
                                        setToDate(e.target.value)

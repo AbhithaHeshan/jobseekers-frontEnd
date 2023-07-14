@@ -77,6 +77,7 @@ export default function CreateWorks() {
                  "title":title.value,
                  "category" : category,
                  "description":description.value,
+                 "docUrl":"",
                  "docUrl":""
             },
             "givenDate": givenDate,

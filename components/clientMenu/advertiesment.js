@@ -4,13 +4,14 @@ import MenuButton from '../MenuButton'
 import TransparentScreen from '../TransparentScreen'
 import CreateAds from './clientSubMenus/createAds'
 import ViewAds from './clientSubMenus/viewAds'
+import RegisterAsEmployee from './clientSubMenus/registerEmployees'
 export default function Advertiesment() {
   const[visible,setVisible]= useState({visible:false,item:''})
 
   function onChangeItems(){
     switch(visible.item){
       case "createAds" : return <CreateAds/>;
-      case "EmployeeRequests" : return "new emplyee job requests , we can approve or reject viwing their(employees) cvs";
+      case "EmployeeRequests" : return <RegisterAsEmployee/>;
       case "LiveAds" : return <ViewAds/>;
       default : "dsd";
     }

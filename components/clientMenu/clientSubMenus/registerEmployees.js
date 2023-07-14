@@ -1,3 +1,6 @@
+import BtnDropDown from '@/components/btnDropDown';
+import JobRoleType from '@/components/jobRoleType';
+import { GET_APLLICATIONS_BY } from '@/service/api-endpoints/application';
 import { GET_WORKKS_BY, MARK_AS_READ } from '@/service/api-endpoints/works';
 import { getEmployeesForClient } from '@/service/common/getAllRegisteredEmployees';
 import { BASE_URL } from '@/service/network-configs/http/basicConfig';
@@ -13,10 +16,10 @@ const status = [
 ]
 
 const filterStatus = [
-     "Submitted","Pending","Cancel","Read"
+     "Registered","New","Cancel","All"
 ]
 
-export default function AllTasks() {
+export default function RegisterAsEmployee() {
       const[allEmployees,setAllEmployees] = useState([]);
       const[category,setCategorys] = useState([]);
       const[name,setNames] = useState([]);
@@ -25,11 +28,13 @@ export default function AllTasks() {
       const[selectedStatus,setSelectedStatus] = useState('');
       const[details,setDetails] = useState({});
       const[filterStatusValue,setFilterStatusValue] = useState('All');
-      const[respDetails,setRespDetails] = useState([]);
+     
       const[hideButton,setHideButton] = useState(false);
       const[workId,setWorkId] = useState('');
       const[base64Image,setBase64Image] = useState([]);
-      
+      const[jobType,setJobType] = useState('');
+      const[jobRoleType,setRoleType] = useState('');
+      const[respDetails,setRespDetails] = useState([]);
       
         const handleDownload = () => {
 
@@ -59,7 +64,7 @@ export default function AllTasks() {
         if(response?.status === 200 ) {
                  //   console.log("response.data")
                  console.log(response?.data);
-                 setRespDetails(response?.data?.employeClientData)
+                 //setRespDetails(response?.data?.employeClientData)
                    // setData(response)
         }else if (response?.status == 400){
                 //  notify(notifyStatus.ERROR,response.message)
@@ -103,15 +108,57 @@ export default function AllTasks() {
         }).catch((err)=>{
              console.log(err);
         })
-       
+        
      },[])
+
+
+     async function get_by(){
+
+        const { access_token, refresh_token, userRole, userId }  = getUserCredentialsFromLocalStorage();    
+
+
+    
+
+   
+
+                const header = {
+                    
+                }
+
+                let status = "";
+                if(filterStatusValue === "All"){
+                   status = null;
+                }else{
+                   status = filterStatusValue;
+                }
+
+                const Id =userId;
+                const job = jobType;
+                const catogary = jobRoleType;
+                
+                console.log(Id , " " , job , " " , catogary , " " ,status);
+            
+                const uri = `/${Id}/${job}/${catogary}/${status}`
+                const response = await httpGET(BASE_URL + GET_APLLICATIONS_BY + uri,header)
+                console.log(response);
+                if(response?.status === 200 ) {
+                    setRespDetails(response?.data)
+                    console.log(response , "            /////// /////  FFFF ")
+                }else if (response?.status == 400){
+                        notify(notifyStatus.ERROR,response.message)
+                }else if (response?.status >= 403){
+                        notify(notifyStatus.ERROR,"ddd")
+                }
+
+                
+}
 
 
      function statusColor(status){
          switch(status){
-            case "Pending" : return "#F89028";
+            case "New" : return "#F89028";
             case "Accept"  : return  "#34F547";
-            case "Submitted"  : return  "#34F547";
+            case "Registered"  : return  "#34F547";
             case "Read"  : return  "blue";
             case "Cancel"  : return  "#F42725";
             default : return "#5037D0"
@@ -124,18 +171,15 @@ export default function AllTasks() {
 
                 <div style={{width:'100%',height:"50px",marginTop:'10px'}}>
                         
-                        <div style={{display: 'flex', flexDirection: 'row'}}>
-                            <select className='box-shadow-type-one' style={{borderRadius:'10px',width:  '15%',paddingLeft:'10px',height:"40px",margin:'10px'}} onChange={(e)=>{ setSelectedRole(e.target.value);getAll(e.target.value,filterStatusValue)}} >
-                                <option style={{fontSize:'12px' , width:'20%' , paddingLeft:'20px'}} value={"All"}  selected>All</option>
-                                { 
-                                     category.map((item, index) => (
-                                         <option style={{fontSize:'12px' , width:'100%' , paddingLeft:'20px'}} value={item}  key={index}>{item}</option>
-                                     ))      
-                                }  
-                            </select>
+                        <div style={{display: 'flex', flexDirection: 'row',padding:'10px',columnGap:'10px'}}>
+                        
+                            <BtnDropDown onChange={(e)=>{setJobType(e);}} width={"200px"}/>
 
-                            <select className='box-shadow-type-one' style={{borderRadius:'10px',width:  '15%',paddingLeft:'10px',height:"40px",margin:'10px'}} onChange={(e)=>{ setFilterStatusValue(e.target.value);getAll(selectedRole,e.target.value)}} >
-                                <option style={{fontSize:'12px' , width:'20%' , paddingLeft:'20px'}} selected>All</option>
+                            <JobRoleType onChange={(value)=>{setRoleType(value)}} catogary={jobType} width={"200px"}/>
+                            
+                        
+                            <select className='box-shadow-type-one' style={{borderRadius:'10px',width:'15%',height:"40px"}} onChange={(e)=>{ setFilterStatusValue(e.target.value);getAll(selectedRole,e.target.value)}} >
+                                <option style={{fontSize:'12px' , width:'20%' , paddingLeft:'20px'}} selected>New</option>
                                 { 
                                      filterStatus.map((item, index) => (
                                          <option style={{fontSize:'12px' , width:'100%' , paddingLeft:'20px'}} value={item}  key={index}>{item}</option>
@@ -143,6 +187,7 @@ export default function AllTasks() {
                                 }  
                             </select>
 
+                    
                         </div> 
                 </div>
                 <div className='box-shadow-type-two' style={{ width:'100%',height:"90%",marginTop:'10px',display:'flex',flexDirection:'row'}}>
@@ -155,13 +200,13 @@ export default function AllTasks() {
                                     return(
                                         <div className='box-shadow-type-two' style={{ width:'50%',height:"90px",marginTop:'10px',display:'flex',flexDirection:'column',borderRadius:'10px'}} onClick={()=>{setDetails(data);setHideButton(data?.workStatus === "Submitted");setWorkId(data?.jobId);setBase64Image([data?.workInfo?.docUrl,data?.workInfo?.docUrl2])}}>
                                                 <div style={{ width:'100%',height:"30px",marginTop:'10px',display:'flex',flexDirection:'column',paddingLeft:'20px'}}>
-                                                    <label style={{fontSize:'20px',fontWeight:'500'}}>{data.workInfo.title}</label>   
+                                                    <label style={{fontSize:'20px',fontWeight:'500'}}>{"data.workInfo.title"}</label>   
                                                 </div>
                                                 <div style={{width:'100%',height:"30px",marginTop:'10px',display:'flex',flexDirection:'row',justifyContent:"space-between",alignItems:'center'}}>
-                                                    <label style={{marginLeft:'20px',fontSize:'12px'}}>{data.workInfo.description}</label>
+                                                    <label style={{marginLeft:'20px',fontSize:'12px'}}>{"data.workInfo.description"}</label>
                                                     <div style={{display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'center',columnGap:'10px',marginRight:'10px'}}>
                                                         <label>{data.workStatus}</label>
-                                                        <div style={{width:'10px',height:'10px',borderRadius:"100%",backgroundColor:statusColor(data.workStatus)}}/>
+                                                        <div style={{width:'10px',height:'10px',borderRadius:"100%",backgroundColor:statusColor(data?.workStatus)}}/>
                                                     </div>
                                                 </div>
                                          </div>
@@ -230,11 +275,7 @@ export default function AllTasks() {
                                                                 <div style={{width:'150px',height:'40px',display:'flex',borderRadius:'10px',margin:"10px"}}>
                                                                         <div style={{backgroundColor:'#5037D0',width:'80%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',borderRightColor:'2px solid #FFFFFF',borderTopLeftRadius:'10px',borderBottomLeftRadius:'10px',cursor:'pointer'}} onClick={()=>{
                                                                     
-                                                                            if(hideButton){
-                                                                                setAsRead()
-                                                                            }else{
-                                                                                notify(notifyStatus.ERROR,"This Work Not Submitted")
-                                                                            }
+                                                                                  get_by()
                                                                         }}>
                                                                                     <label style={{fontSize:'12px',fontWeight:'500',color:'white'}}>Mark As Read</label>
                                                                         </div>

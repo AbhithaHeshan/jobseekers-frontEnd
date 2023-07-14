@@ -1,0 +1,1 @@
+export const GET_APLLICATIONS_BY = "jobApplication/get/by"

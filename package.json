@@ -12,6 +12,7 @@
     "@reduxjs/toolkit": "^1.9.5",
     "autoprefixer": "10.4.14",
     "axios": "^1.4.0",
+    "b64-to-blob": "^1.2.19",
     "file-uri-to-path": "^2.0.0",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^3.1.2",
