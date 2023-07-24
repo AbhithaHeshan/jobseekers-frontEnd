@@ -1,17 +1,34 @@
 import Button from "@/components/button";
-import React,{useState,useRef} from "react";
+import React,{useState,useRef, useEffect} from "react";
 import Image from "next/image";
 import { getUserCredentialsFromLocalStorage } from "@/util/storage";
 import { BASE_URL } from "@/service/network-configs/http/basicConfig";
 import { CREATE_NEW_APPLICATION } from "@/service/api-endpoints/application";
 import { httpPOST } from "@/service/network-configs/http/service";
-import { useRouter } from 'next/navigation';
+import { useRouter } from 'next/router';
+import TextField from "@/components/textField";
+import Loarder from "@/components/Loarder";
+import Toaster from "@/components/Toaster";
+import { notify, notifyStatus } from "@/util/notify";
 
 export default function ViewAndApply() {
      
       const[cvUri,setCvUri] = useState("");
+      const[name,setName] = useState("");
+      const[address,setAddress] = useState("");
+      const[email,setEmail] = useState("");
+      const[tel,setTel] = useState("");
+      const[additional,setAdditionals] = useState("");
+      const[isLoading,setLoading] = useState(false);
       const fileInputRef3 = useRef(null);
       const router = useRouter();
+      const details = router.query;
+   
+
+        
+       
+     
+
 
       async function convertBlobURLToBlob(blobURL) {
             const response = await fetch(blobURL);
@@ -40,29 +57,33 @@ export default function ViewAndApply() {
       };
 
       async function submit(){
-
-        const { access_token, refresh_token, userRole, userId } = getUserCredentialsFromLocalStorage();
+           console.log(details , "bbb ");
+        const { access_token, refresh_token, userRole, userId:empId} = getUserCredentialsFromLocalStorage();
        
         const data = {
+
                   "applicationId":"",
-                  "name": "John Doe",
-                  "address": "123 Main Street, City, State",
+                  "name": name,
+                  "address": address,
                   "dateOfBirth": "1990-01-01",
-                  "email": "johndoe@example.com",
-                  "telOne": "1234567890",
-                  "telTwo": "9876543210",
-                  "workingType": "Full-time",
+                  "email": email,
+                  "telOne": tel,
+                  "telTwo": "xxxxxxxxxxx",
+                  "workingType": details?.workingType,
                   "cvUri": "",
-                  "additionalQualifications": "Lorem dfdf ipsum dolor sit amet, consectetur adipiscing elit.",
+                  "additionalQualifications": additional,
                   "userId": "",
-                  "jobCatogary": "Software Development"
+                  "jobCatogary": details?.clarification,
+                  "jobRoleType": details?.jobType
          }
 
+   
+      
          const url = BASE_URL + CREATE_NEW_APPLICATION;
   
          const headers = {
-            "employeeUserId":'00012',
-            "clientUserId" : '1421'   
+            "employeeUserId":empId,
+            "clientUserId" : details?.userId   
          };
 
          const cvUriBlob = await convertBlobURLToBlob(cvUri)
@@ -75,35 +96,116 @@ export default function ViewAndApply() {
 
          if(response?.status === 200){
                  setLoading(false);
-                 setEmptyAllField();
-                 notify(notifyStatus.SUCCESS,"New  Client Save ")
-               setTimeout(function() {
-                   router.replace("/login/page")
-               }, 2500);
+                 notify(notifyStatus.SUCCESS,"Application Submitted")
+                 setTimeout(function() {
+                   router.replace("/login/employee/page")
+                 }, 2500);
        
          }else if(response?.status >= 400){
             notify(notifyStatus.ERROR,"Failed to submit application")
          }else{
             notify(notifyStatus.ERROR,"Failed to submit application")
          } 
-           
-         
+
      }
+
+
 
       return(
            <div style={{height:'100vh',display:'flex',alignItems:"center",justifyContent:'center'}}>
                <div className='box-shadow-type-two' style={{width:'500px',height:'500px',display:'flex',flexDirection:'column',alignItems:'center',borderRadius:''}}>
-                     <label>Adsd</label>
+                     <div style={{margin:'20px'}}>  
+                       
+                        <div style={{display: 'flex', flexDirection: 'column'}}>
+                            <label style={{fontFamily: 'inter', fontSize: '13px'}}>Name </label>
+                            <TextField
+                                width={"420px"}
+                                height={"40px"}
+                                placeholder={"period ex - 3 months , permenent"}
+                                borderRadius={"10px"}
+                                type={"text"}
+                                onChange={(e) => {
+                                    setName(e.value)
+                                }}
+                                value={name}
+                            />
+                        </div>
+
+
+                        <div style={{display: 'flex', flexDirection: 'column'}}>
+                            <label style={{fontFamily: 'inter', fontSize: '13px'}}>Address </label>
+                            <TextField
+                                width={"420px"}
+                                height={"40px"}
+                                placeholder={"period ex - 3 months , permenent"}
+                                borderRadius={"10px"}
+                                type={"text"}
+                                onChange={(e) => {
+                                    setAddress(e.value)
+                                }}
+                                value={address}
+                            />
+                        </div>
+
+
+                        <div style={{display: 'flex', flexDirection: 'column'}}>
+                            <label style={{fontFamily: 'inter', fontSize: '13px'}}>Email </label>
+                            <TextField
+                                width={"420px"}
+                                height={"40px"}
+                                placeholder={"period ex - 3 months , permenent"}
+                                borderRadius={"10px"}
+                                type={"text"}
+                                onChange={(e) => {
+                                    //setPeriod({value: e.value, bool: e.bool})
+                                    setEmail(e.value)
+                                }}
+                                value={email}
+                            />
+                        </div>
+
+                        <div style={{display: 'flex', flexDirection: 'column'}}>
+                            <label style={{fontFamily: 'inter', fontSize: '13px'}}>Tel 
+                            </label>
+                            <TextField
+                                width={"420px"}
+                                height={"40px"}
+                                placeholder={"period ex - 3 months , permenent"}
+                                borderRadius={"10px"}
+                                type={"text"}
+                                onChange={(e) => {
+                                    //setPeriod({value: e.value, bool: e.bool})
+                                    setTel(e.value)
+                                }}
+                                value={tel}
+                            />
+                        </div>
+
+
+                        <div style={{display: 'flex', flexDirection: 'column'}}>
+                            <label style={{fontFamily: 'inter', fontSize: '13px'}}>Additional-Qualifications </label>
+                            <TextField
+                                width={"420px"}
+                                height={"40px"}
+                                placeholder={"period ex - 3 months , permenent"}
+                                borderRadius={"10px"}
+                                type={"text"}
+                                onChange={(e) => {
+                                    //setPeriod({value: e.value, bool: e.bool})
+                                    setAdditionals(e.value)
+                                }}
+                                value={additional}
+                            />
+                        </div>
+                     </div>
                      <div style={{width:'90%',height:'90%'}}>
                            <div className='box-shadow-type-two'  style={{height:'70px',width:'100%',borderRadius:'10px',display:'flex',justifyContent:'center',alignItems:'center',flexDirection:'row'}}>
                                      
-
                                      <div style={{width:'90%',display:'flex',alignItems:'center',justifyContent:'center',position:'relative'}}>
                                           <Button title={"Upload CV"} width={"80%"} height={"35px"} color={"white"} backgroundColor={"#8B7AE0"} onClick={()=>{handleClickCvUri()}} />
                                           <Image  width={10} height={10} src={cvUri != '' ? "/images/signup/client/correct.gif" : "/images/signup/client/1.png"} style={{width:'20px',position:'absolute',right:'50px',margin:'auto'}} className='border'/>
                                      </div>
                         
-
                                      <input
                                         id="fileInput"
                                         ref={fileInputRef3}
@@ -113,14 +215,18 @@ export default function ViewAndApply() {
                                         style={{ display: 'none' }}
                                       />
                                    
-
                             </div>     
                      </div>
                      <div>
-                        <Button title={"Submit"} width={"105px"} height={"28px"} color={"white"} backgroundColor={"#6149D8"} onClick={()=>{router.push('/signup/page')}} />
+                        <Button title={"Submit"} width={"105px"} height={"28px"} color={"white"} backgroundColor={"#6149D8"} onClick={()=>{
+                              submit();
+                        }} />
                      </div>
                     
                </div>
+
+               <Loarder  visible={isLoading} />
+               <Toaster/>
 
            </div>
       )

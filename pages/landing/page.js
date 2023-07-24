@@ -219,17 +219,17 @@ export default function Landing() {
                                                 onClick={() => {
                                                         
                                                    const formdata = {
-                                                                      "clarification": data.clarification,
-                                                                      "description" :data.description,
-                                                                      "endDate" : data.endDate,
-                                                                      "experienceLevel": data.experienceLevel,
-                                                                      "hourlyRate" : data.hourlyRate,
-                                                                      "jobType": data.jobType,
-                                                                      "period": data.period,
-                                                                      "startDate": data.startDate,
-                                                                      "title" : data.title,
-                                                                      "userId" : data.userId,
-                                                                      "workingType": data.workingType
+                                                                      clarification: data?.clarification,
+                                                                      description :data?.description,
+                                                                      endDate : data?.endDate,
+                                                                      experienceLevel: data?.experienceLevel,
+                                                                      hourlyRate : data?.hourlyRate,
+                                                                      jobType: data?.jobType,
+                                                                      period: data?.period,
+                                                                      startDate: data?.startDate,
+                                                                      title : data?.title,
+                                                                      userId : data?.userId,
+                                                                      workingType: data?.workingType
                                                                     }
 
                                             

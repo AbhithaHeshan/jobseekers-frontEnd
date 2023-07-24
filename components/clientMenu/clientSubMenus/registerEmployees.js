@@ -84,7 +84,8 @@ export default function RegisterAsEmployee() {
                 let status = "";
                 if(filterStatusValue === "All"){
                    status = null;
-                }else{
+                }
+                else{
                    status = filterStatusValue;
                 }
 
