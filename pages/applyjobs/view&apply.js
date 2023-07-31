@@ -23,11 +23,6 @@ export default function ViewAndApply() {
       const fileInputRef3 = useRef(null);
       const router = useRouter();
       const details = router.query;
-   
-
-        
-       
-     
 
 
       async function convertBlobURLToBlob(blobURL) {
@@ -77,8 +72,6 @@ export default function ViewAndApply() {
                   "jobRoleType": details?.jobType
          }
 
-   
-      
          const url = BASE_URL + CREATE_NEW_APPLICATION;
   
          const headers = {
@@ -108,7 +101,6 @@ export default function ViewAndApply() {
          } 
 
      }
-
 
 
       return(
