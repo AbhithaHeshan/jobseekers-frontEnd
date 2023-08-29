@@ -11,6 +11,7 @@ import { getUserCredentialsFromLocalStorage } from '@/util/storage';
 import { httpGET } from '@/service/network-configs/http/service';
 import { BASE_URL } from '@/service/network-configs/http/basicConfig';
 import { useRouter } from 'next/navigation';
+import SubmitTask from "@/components/employee/submitTask";
  function Main() {
 
 
@@ -27,8 +28,9 @@ import { useRouter } from 'next/navigation';
 
   function onChangeItems(){
     switch(visible.item){
-      case "viewAll" : return "view all employees of the client have";
-      case "viewTeam" : return "view all employees of the client have as a teams ex- according to Hotel hotel has waiters,managers,cheff";
+      case "Tasks" : return "view all employees of the client have";
+      case "Completed" : return "view all employees of the client have as a teams ex- according to Hotel hotel has waiters,managers,cheff";
+      case "SubmitTask" : return <SubmitTask/>;
       default : "dsd";
     }
   }
@@ -37,9 +39,9 @@ import { useRouter } from 'next/navigation';
     console.log("DDDDDDDDDDD");
   if (userDetails.address) {
       let { street, city, state, zipCode } = userDetails.address;
-    
+
       return street + "," +  city + "," + state +'\n'+ zipCode;
-      
+
     } else {
       return "street" + "," +  "city" + "," + "state" +'\n'+ "zipCode";
     }
@@ -73,9 +75,9 @@ const onChangeProfileImg = (event) => {
           'userId': userId,
           'role': userRole,
           };
-  
+
         const response = await httpGET(BASE_URL + GET_EMPLOYEE, headers);
-        
+
         if (response.status === 200) {
           setLoading(false);
           setDetails(response.data);
@@ -91,10 +93,10 @@ const onChangeProfileImg = (event) => {
         }
 
       }
-  
+
     getClient();
   },[])
-  
+
 
 
   return (
@@ -117,16 +119,16 @@ const onChangeProfileImg = (event) => {
                           <li>Earns</li>
                         </ul>
                     <label>{userDetails.name}</label>
-          
+
                     <div style={{width:'35px',height:'35px',borderRadius:'100%',border:'2px solid gray',marginRight:'30px',backgroundSize: 'cover',backgroundImage:`url(data:image/png;base64,${userDetails.profileImageUri})`,backgroundRepeat:'no-repeat'}}/>
                 </div>
           </div>
         </div>
 
-          
+
         <div style={{width:'100vw',height:'95vh',display:'flex',flexDirection:'row'}}>
                 <div style={{width:'15vw',borderTopRightRadius:'12px',borderBottomRightRadius:'12px',borderRight:'2px solid #DFD7FF',display:'flex',justifyContent:'center',alignItems:'center'}}>
-                             
+
                             <div style={{width:'230px',height:'90vh',display:'flex',flexDirection:'column',rowGap:'20px',alignItems:'center'}}>
                                <div style={{width:'100%',display:'flex',justifyContent:'center',position:'relative'}}>
                                  <div style={{backgroundImage:`url(data:image/png;base64,${userDetails.profileImageUri})`,width:'80px',height:'80px',borderRadius:"100%",border:'2px solid gray', backgroundSize: 'cover',backgroundPosition: 'center'}}/>
@@ -148,16 +150,24 @@ const onChangeProfileImg = (event) => {
                                 <TextGroupContainer topic={"Job Type"} subTopic={userDetails.jobType} width={"200px"}/>
                                 <TextGroupContainer topic={"Catogary Type"} subTopic={userDetails.jobRoleType} width={"200px"}/>
                             </div>
-              
-                </div>
-                <div style={{width:'89vw',borderRadius:'10px',margin:'5px'}}>
-                     <div style={{height:'100px',display:'flex',flexDirection:'row',columnGap:'10px'}}> 
-                          <MenuButton  title={"All Tasks"} imageUrl={"/images/common/People.png"} backgroundColor={"#F2EFFE"} onClick={()=>{setVisible({visible:true,item:'Tasks'}) }} />
-                          <MenuButton  title={"Completed Tesks"} imageUrl={"/images/common/People.png"} backgroundColor={"#F2EFFE"} onClick={()=>{setVisible({visible:true,item:'Completed'}) }} />
-                          <MenuButton  title={"Submit Task"} imageUrl={"/images/common/People.png"} backgroundColor={"#F2EFFE"} onClick={()=>{setVisible({visible:true,item:'Completed'}) }} />
-                     </div>
 
                 </div>
+                <div style={{width:'89vw',borderRadius:'10px',margin:'5px'}}>
+                     <div style={{height:'100px',display:'flex',flexDirection:'row',columnGap:'10px'}}>
+                          <MenuButton  title={"All Tasks"} imageUrl={"/images/common/People.png"} backgroundColor={"#F2EFFE"} onClick={()=>{setVisible({visible:true,item:'Tasks'}); }} />
+                          <MenuButton  title={"Completed Tesks"} imageUrl={"/images/common/People.png"} backgroundColor={"#F2EFFE"} onClick={()=>{setVisible({visible:true,item:'Completed'}); }} />
+                          <MenuButton  title={"Submit Task"} imageUrl={"/images/common/People.png"} backgroundColor={"#F2EFFE"} onClick={()=>{setVisible({visible:true,item:'SubmitTask'});}} />
+                     </div>
+
+                    <div style={{height:'85%',display:'flex',flexDirection:'row',columnGap:'10px',border:'2px solid red',marginTop:'20px'}}>
+                        {
+                            onChangeItems()
+                        }
+                    </div>
+
+                </div>
+
+
         </div>
 
          <Loarder  visible={isLoading} />

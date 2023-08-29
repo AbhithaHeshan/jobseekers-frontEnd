@@ -27,8 +27,8 @@ export default function EmployeeView() {
       const[respDetails,setRespDetails] = useState([]);
       const[hideButton,setHideButton] = useState(false);
       const[workId,setWorkId] = useState('');
-      
-    
+
+
       async function  getAll( de , fs){
 
         const { access_token, refresh_token, userRole, userId }  = getUserCredentialsFromLocalStorage();
@@ -36,8 +36,8 @@ export default function EmployeeView() {
         const header = {
              "userId" : userId,
              "catogary":de,
-             "status" :fs 
-    
+             "status" :fs
+
         }
         console.log(header , "ggg ");
         const response = await httpGET(BASE_URL + GET_WORKKS_BY,header)
@@ -52,7 +52,7 @@ export default function EmployeeView() {
             notify(notifyStatus.ERROR,"ddd")
         }
    }
-  
+
    async function setAsRead(){
 
                     const header = {
@@ -68,17 +68,17 @@ export default function EmployeeView() {
                     }else if (response?.status >= 403){
                         notify(notifyStatus.ERROR,"ddd")
                     }
-                            
+
    }
-   
+
     function getEmployees(){
         getEmployeesForClient().then((data)=>{
             const{allEmployees,onlyCatogaries,onlyEmployees} = data ;
-   
+
                 setAllEmployees(allEmployees)
                 setCategorys(onlyCatogaries);
                 setNames(onlyEmployees);
-        
+
        }).catch((err)=>{
          console.log(err);
        })
@@ -86,9 +86,9 @@ export default function EmployeeView() {
 
 
     useEffect(()=>{
-      
+
         getEmployees();
-   
+
      },[])
 
 
@@ -108,10 +108,10 @@ export default function EmployeeView() {
       <div style={{ width:'100%',height:'100%'}}>
 
                 <div style={{width:'100%',height:"50px",marginTop:'10px'}}>
-                        
+
                         <div style={{display: 'flex', flexDirection: 'row'}}>
                             <select className='box-shadow-type-one' style={{borderRadius:'10px',width:  '15%',paddingLeft:'10px',height:"40px",margin:'10px'}} onChange={(e)=>{
-                                
+
                                    setSelectedRole(e.target.value);
 
                                    if(e.target.value === "All"){
@@ -119,32 +119,32 @@ export default function EmployeeView() {
                                    }else{
                                         getEmployeesForClient().then((data)=>{
                                             const{allEmployees,onlyCatogaries,onlyEmployees} = data ;
-                                
+
                                                 setAllEmployees(allEmployees)
                                                 setAllEmployees(getAvailaleEmployeesX(e?.target?.value,allEmployees))
-                                        
+
                                     }).catch((err)=>{
                                         console.log(err);
                                     })
-                                    
 
-                                   }  
+
+                                   }
 
                              }} >
                                    <option style={{fontSize:'12px' , width:'20%' , paddingLeft:'20px'}} value={"All"} selected>All</option>
-                                { 
+                                {
                                      category.map((item, index) => (
                                          <option style={{fontSize:'12px' , width:'100%' , paddingLeft:'20px'}} value={item}  key={index}>{item}</option>
-                                     ))      
-                                }  
+                                     ))
+                                }
                             </select>
 
-                        </div> 
+                        </div>
                 </div>
                 <div className='box-shadow-type-two' style={{ width:'100%',height:"90%",marginTop:'10px',display:'flex',flexDirection:'row'}}>
                        <div style={{ width:'50%',height:"100%",marginTop:'10px',display:'flex',flexDirection:'column',overflowY:'scroll',alignItems:'center'}}>
-                             
-                            
+
+
 
                              {
                                 allEmployees?.map((data,index)=>{
@@ -153,15 +153,15 @@ export default function EmployeeView() {
                                         <div className='box-shadow-type-two' style={{ width:'300px',height:"90px",marginTop:'10px',display:'flex',flexDirection:'row',borderRadius:'10px',alignItems:'center'}} onClick={()=>{setDetails(data);setHideButton(data?.workStatus === "Submitted");setWorkId(data?.jobId)}}>
                                               <div style={{display:'flex',flexDirection:'column',width:"80%"}}>
                                                   <div style={{ width:'100%',height:"30px",marginTop:'10px',display:'flex',flexDirection:'column',paddingLeft:'20px'}}>
-                                                    <label style={{fontSize:'20px',fontWeight:'500'}}>{data.name}</label>   
+                                                    <label style={{fontSize:'20px',fontWeight:'500'}}>{data.name}</label>
                                                   </div>
-                                                <div style={{width:'100%',height:"30px",marginTop:'10px',display:'flex',flexDirection:'column',justifyContent:"space-between",alignItems:'center'}}>                                      
-                                                         <label>{data.jobType}</label>  
+                                                <div style={{width:'100%',height:"30px",marginTop:'10px',display:'flex',flexDirection:'column',justifyContent:"space-between",alignItems:'center'}}>
+                                                         <label>{data.jobType}</label>
                                                 </div>
 
                                               </div>
 
-                                                <div  style={{width:'50px',height:'50px',borderRadius:'100%',backgroundSize: 'cover',backgroundPosition: 'center', backgroundImage:`url(data:image/png;base64,${data?.profileImageUri})`}}  />  
+                                                <div  style={{width:'50px',height:'50px',borderRadius:'100%',backgroundSize: 'cover',backgroundPosition: 'center', backgroundImage:`url(data:image/png;base64,${data?.profileImageUri})`}}  />
                                          </div>
                                     )
                                 })
@@ -179,90 +179,54 @@ export default function EmployeeView() {
                                                            <label>{details?.workInfo?.description}</label>
                                                        </div>
                                                        <div style={{width:"70%",display:'flex',flexDirection:'row',columnGap:'100px'}}>
-                                                               
-                                                                     <div style={{width:'100px',display:"flex",alignItems:'center',flexDirection:'column'}}>
-                                                                   
-                                                                        <div style={{width:'100px',height:'100px',backgroundSize: 'cover',backgroundPosition: 'center', backgroundImage:`url(data:image/png;base64,${details?.workInfo?.docUrl})`}}/>
 
-                                                                        
+                                                                     <div style={{width:'100px',display:"flex",alignItems:'center',flexDirection:'column'}}>
+
+                                                                        <div style={{width:'100px',height:'100px',backgroundSize: 'cover',backgroundPosition: 'center', backgroundImage:`url(data:image/png;base64,${details?.profileImageUri})`}}/>
+
+
                                                                          {details?.workInfo?.docUrl != null ?  <label>Task</label> : ''}
                                                                      </div>
-                                                                
+
                                                                       <div style={{width:'100px',display:"flex",alignItems:'center',flexDirection:'column'}}>
-                                                                   
-                                                                         <div style={{width:'100px',height:'100px',backgroundSize: 'cover',backgroundPosition: 'center', backgroundImage:`url(data:image/png;base64,${details?.workInfo?.docUrl2})`}}/>         
-                                            
+
+                                                                         <div style={{width:'100px',height:'100px',backgroundSize: 'cover',backgroundPosition: 'center', backgroundImage:`url(data:image/png;base64,${details?.workInfo?.docUrl2})`}}/>
+
                                                                          {details?.workInfo?.docUrl2 != null ?  <label>submitted</label> : ''}
                                                                      </div>
                                                        </div>
 
-                                                      {details?.employeeName != null && <div style={{display:'felx',flexDirection:'column',alignSelf:'flex-start',margin:'10px',width:"400px"}}>
-                                                               
-                                                                   <div style={{display:'flex',flexDirection:'row',columnGap:'10px',margin:'10px'}}>
-                                                                     <lable>deadline : </lable>
-                                                                     <lable>{details?.deadline}</lable>
-                                                                   </div> 
-                                                                
-                                                               
-                                                                   <div style={{display:'flex',flexDirection:'row',columnGap:'10px',margin:'10px'}}>
-                                                                     <lable>submittedDate : </lable>
-                                                                     <lable>{details?.submittedDate}</lable>
-                                                                   </div> 
+                                                    <div style={{display:'felx',flexDirection:'column',alignSelf:'flex-start',margin:'10px',width:"400px"}}>
 
                                                                    <div style={{display:'flex',flexDirection:'row',columnGap:'10px',margin:'10px'}}>
-                                                                     <lable>employeeName : </lable>
-                                                                     <lable>{details?.employeeName}</lable>
-                                                                   </div> 
+                                                                     <lable>Email : </lable>
+                                                                     <lable>{details?.email}</lable>
+                                                                   </div>
+
 
                                                                    <div style={{display:'flex',flexDirection:'row',columnGap:'10px',margin:'10px'}}>
-                                                                     <lable>jobId  : </lable>
-                                                                     <lable>{details?.jobId}</lable>
-                                                                   </div> 
+                                                                     <lable>JobRoleType : </lable>
+                                                                     <lable>{details?.jobRoleType}</lable>
+                                                                   </div>
 
-                                                       </div>}
+                                                                   <div style={{display:'flex',flexDirection:'row',columnGap:'10px',margin:'10px'}}>
+                                                                     <lable>name : </lable>
+                                                                     <lable>{details?.name}</lable>
+                                                                   </div>
+
+                                                                   <div style={{display:'flex',flexDirection:'row',columnGap:'10px',margin:'10px'}}>
+                                                                     <lable>workingType  : </lable>
+                                                                     <lable>{details?.workingType}</lable>
+                                                                   </div>
+
+                                                       </div>
 
                                                  </div>
-                                                <div style={{display:'flex',flexDirection:'column',alignSelf:'flex-end',position:'relative'}}>                 
-                                                                <div style={{width:'150px',height:'40px',display:'flex',borderRadius:'10px',margin:"10px"}}>
-                                                                        <div style={{backgroundColor:'#5037D0',width:'80%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',borderRightColor:'2px solid #FFFFFF',borderTopLeftRadius:'10px',borderBottomLeftRadius:'10px',cursor:'pointer'}} onClick={()=>{
-                                                                    
-                                                                            if(hideButton){
-                                                                                setAsRead()
-                                                                            }else{
-                                                                                notify(notifyStatus.ERROR,"This Work Not Submitted")
-                                                                            }
-                                                                        }}>
-                                                                                    <label style={{fontSize:'12px',fontWeight:'500',color:'white'}}>Mark As Read</label>
-                                                                        </div>
-                                                                        <div style={{width:'20%',height:'100%',backgroundColor:'#6149D8',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',borderTopRightRadius:'10px',borderBottomRightRadius:'10px'}} onClick={()=>{setDropDownButtonStatus(prev=>!prev)}}>
-                                                                            <Image src={"/images/common/arrowDown.png"} width={20} height={20}/>
-                                                                        </div>
-                                                    
-                                                                </div>
-                                                                    {
-                                                                        dropDownStatus ?   
-                                                                            <div style={{width:'200px',display:'flex',flexDirection:'column',backgroundColor:'#CCC4F0',bottom:'0'}}>
-                                                                                {
-                                                                                    status.map((data,index)=>{
-                                                                                
-                                                                                        return(
-                                                                                            <div style={{border:'2px solid white',height:"20px",display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}} onClick={()=>{ setSelectedStatus(data)  ;setDropDownButtonStatus(prev=>!prev)}}> 
-                                                                                                <label>{data}</label>           
-                                                                                            </div>
-                                                                                        )
-                                                                                    })
-                                                                                }
 
 
-                                                                            </div>
-                                                                        : ""
-                                                                    }
-
-                                                 </div> 
-                                                
 
                                          </div>
-                          
+
 
                        </div>
 
@@ -273,5 +237,5 @@ export default function EmployeeView() {
 
       </div>
     )
- 
+
 }

@@ -12,7 +12,7 @@ import Toaster from "@/components/Toaster";
 import { notify, notifyStatus } from "@/util/notify";
 
 export default function ViewAndApply() {
-     
+
       const[cvUri,setCvUri] = useState("");
       const[name,setName] = useState("");
       const[address,setAddress] = useState("");
@@ -32,12 +32,12 @@ export default function ViewAndApply() {
       }
 
       const handleFileChangeCvUri = (event) => {
-            
+
             try {
               const file = event.target.files[0];
               const fileUri = URL.createObjectURL(file);
               console.log('File URI:', fileUri);
-    
+
               const fileUrl = URL.createObjectURL(file);
               setCvUri(file);
               console.log("URL: ", fileUrl);
@@ -54,7 +54,7 @@ export default function ViewAndApply() {
       async function submit(){
            console.log(details , "bbb ");
         const { access_token, refresh_token, userRole, userId:empId} = getUserCredentialsFromLocalStorage();
-       
+
         const data = {
 
                   "applicationId":"",
@@ -68,24 +68,24 @@ export default function ViewAndApply() {
                   "cvUri": "",
                   "additionalQualifications": additional,
                   "userId": "",
-                  "jobCatogary": details?.clarification,
-                  "jobRoleType": details?.jobType
+                  "jobCatogary": details?.jobType,
+                  "jobRoleType": details?.clarification
          }
 
          const url = BASE_URL + CREATE_NEW_APPLICATION;
-  
+
          const headers = {
             "employeeUserId":empId,
-            "clientUserId" : details?.userId   
+            "clientUserId" : details?.userId
          };
 
          const cvUriBlob = await convertBlobURLToBlob(cvUri)
-
+          console.log(cvUriBlob   ,  "   "  , cvUri)
          let bodyFormData = new FormData();
          bodyFormData.append("application",JSON.stringify(data));
-         bodyFormData.append("cv" , cvUriBlob  , ".png");
+         bodyFormData.append("cv" , cvUri ,'.pdf');
 
-         const response = await httpPOST(url,bodyFormData,'multipart/form-data',headers)    
+         const response = await httpPOST(url,bodyFormData,'multipart/form-data',headers)
 
          if(response?.status === 200){
                  setLoading(false);
@@ -93,12 +93,12 @@ export default function ViewAndApply() {
                  setTimeout(function() {
                    router.replace("/login/employee/page")
                  }, 2500);
-       
+
          }else if(response?.status >= 400){
             notify(notifyStatus.ERROR,"Failed to submit application")
          }else{
             notify(notifyStatus.ERROR,"Failed to submit application")
-         } 
+         }
 
      }
 
@@ -106,8 +106,8 @@ export default function ViewAndApply() {
       return(
            <div style={{height:'100vh',display:'flex',alignItems:"center",justifyContent:'center'}}>
                <div className='box-shadow-type-two' style={{width:'500px',height:'500px',display:'flex',flexDirection:'column',alignItems:'center',borderRadius:''}}>
-                     <div style={{margin:'20px'}}>  
-                       
+                     <div style={{margin:'20px'}}>
+
                         <div style={{display: 'flex', flexDirection: 'column'}}>
                             <label style={{fontFamily: 'inter', fontSize: '13px'}}>Name </label>
                             <TextField
@@ -157,7 +157,7 @@ export default function ViewAndApply() {
                         </div>
 
                         <div style={{display: 'flex', flexDirection: 'column'}}>
-                            <label style={{fontFamily: 'inter', fontSize: '13px'}}>Tel 
+                            <label style={{fontFamily: 'inter', fontSize: '13px'}}>Tel
                             </label>
                             <TextField
                                 width={"420px"}
@@ -192,12 +192,12 @@ export default function ViewAndApply() {
                      </div>
                      <div style={{width:'90%',height:'90%'}}>
                            <div className='box-shadow-type-two'  style={{height:'70px',width:'100%',borderRadius:'10px',display:'flex',justifyContent:'center',alignItems:'center',flexDirection:'row'}}>
-                                     
+
                                      <div style={{width:'90%',display:'flex',alignItems:'center',justifyContent:'center',position:'relative'}}>
                                           <Button title={"Upload CV"} width={"80%"} height={"35px"} color={"white"} backgroundColor={"#8B7AE0"} onClick={()=>{handleClickCvUri()}} />
                                           <Image  width={10} height={10} src={cvUri != '' ? "/images/signup/client/correct.gif" : "/images/signup/client/1.png"} style={{width:'20px',position:'absolute',right:'50px',margin:'auto'}} className='border'/>
                                      </div>
-                        
+
                                      <input
                                         id="fileInput"
                                         ref={fileInputRef3}
@@ -206,15 +206,15 @@ export default function ViewAndApply() {
                                         accept="application/pdf"
                                         style={{ display: 'none' }}
                                       />
-                                   
-                            </div>     
+
+                            </div>
                      </div>
                      <div>
                         <Button title={"Submit"} width={"105px"} height={"28px"} color={"white"} backgroundColor={"#6149D8"} onClick={()=>{
                               submit();
                         }} />
                      </div>
-                    
+
                </div>
 
                <Loarder  visible={isLoading} />
