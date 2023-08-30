@@ -12,6 +12,8 @@ import { httpGET } from '@/service/network-configs/http/service';
 import { BASE_URL } from '@/service/network-configs/http/basicConfig';
 import { useRouter } from 'next/navigation';
 import SubmitTask from "@/components/employee/submitTask";
+import ViewAds from "@/components/clientMenu/clientSubMenus/viewAds";
+import ViewAll from "@/components/employee/viewAll";
  function Main() {
 
 
@@ -28,7 +30,7 @@ import SubmitTask from "@/components/employee/submitTask";
 
   function onChangeItems(){
     switch(visible.item){
-      case "Tasks" : return "view all employees of the client have";
+      case "Tasks" : return <ViewAll/>;
       case "Completed" : return "view all employees of the client have as a teams ex- according to Hotel hotel has waiters,managers,cheff";
       case "SubmitTask" : return <SubmitTask/>;
       default : "dsd";

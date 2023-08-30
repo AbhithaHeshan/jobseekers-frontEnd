@@ -29,8 +29,8 @@ export default function AllTasks() {
       const[hideButton,setHideButton] = useState(false);
       const[workId,setWorkId] = useState('');
       const[base64Image,setBase64Image] = useState([]);
-      
-      
+
+
         const handleDownload = () => {
 
             console.log(base64Image[0]);
@@ -39,10 +39,11 @@ export default function AllTasks() {
 
 
         const handleDownload2 = () => {
-          
+
             downloadImage(base64Image[1], 'image.png', 'image/png');
-          }
-        
+
+        }
+
       async function  getAll( de , fs){
 
         const { access_token, refresh_token, userRole, userId }  = getUserCredentialsFromLocalStorage();
@@ -50,9 +51,10 @@ export default function AllTasks() {
         const header = {
              "userId" : userId,
              "catogary":de,
-             "status" :fs 
-    
+             "status" :fs
+
         }
+
         console.log(header , "ggg ");
         const response = await httpGET(BASE_URL + GET_WORKKS_BY,header)
         console.log(response);
@@ -67,10 +69,9 @@ export default function AllTasks() {
             notify(notifyStatus.ERROR,"ddd")
         }
    }
-  
+
    async function setAsRead(){
 
-                  
 
                     const header = {
                             "jobId" : workId,
@@ -85,17 +86,16 @@ export default function AllTasks() {
                     }else if (response?.status >= 403){
                         notify(notifyStatus.ERROR,"ddd")
                     }
-                            
+
    }
-   
 
     useEffect(()=>{
-    
+
        getAll("All","All")
 
         getEmployeesForClient().then((data)=>{
                 const{allEmployees,onlyCatogaries,onlyEmployees} = data ;
-       
+
                     setAllEmployees(allEmployees)
                     setCategorys(onlyCatogaries);
                     setNames(onlyEmployees);
@@ -103,7 +103,7 @@ export default function AllTasks() {
         }).catch((err)=>{
              console.log(err);
         })
-       
+
      },[])
 
 
@@ -123,39 +123,39 @@ export default function AllTasks() {
       <div style={{ width:'100%',height:'100%'}}>
 
                 <div style={{width:'100%',height:"50px",marginTop:'10px'}}>
-                        
+
                         <div style={{display: 'flex', flexDirection: 'row'}}>
                             <select className='box-shadow-type-one' style={{borderRadius:'10px',width:  '15%',paddingLeft:'10px',height:"40px",margin:'10px'}} onChange={(e)=>{ setSelectedRole(e.target.value);getAll(e.target.value,filterStatusValue)}} >
                                 <option style={{fontSize:'12px' , width:'20%' , paddingLeft:'20px'}} value={"All"}  selected>All</option>
-                                { 
+                                {
                                      category.map((item, index) => (
                                          <option style={{fontSize:'12px' , width:'100%' , paddingLeft:'20px'}} value={item}  key={index}>{item}</option>
-                                     ))      
-                                }  
+                                     ))
+                                }
                             </select>
 
                             <select className='box-shadow-type-one' style={{borderRadius:'10px',width:  '15%',paddingLeft:'10px',height:"40px",margin:'10px'}} onChange={(e)=>{ setFilterStatusValue(e.target.value);getAll(selectedRole,e.target.value)}} >
                                 <option style={{fontSize:'12px' , width:'20%' , paddingLeft:'20px'}} selected>All</option>
-                                { 
+                                {
                                      filterStatus.map((item, index) => (
                                          <option style={{fontSize:'12px' , width:'100%' , paddingLeft:'20px'}} value={item}  key={index}>{item}</option>
-                                     ))      
-                                }  
+                                     ))
+                                }
                             </select>
 
-                        </div> 
+                        </div>
                 </div>
                 <div className='box-shadow-type-two' style={{ width:'100%',height:"90%",marginTop:'10px',display:'flex',flexDirection:'row'}}>
                        <div style={{ width:'50%',height:"100%",marginTop:'10px',display:'flex',flexDirection:'column',overflowY:'scroll',alignItems:'center'}}>
-                             
-                        
+
+
                              {
                                 respDetails?.map((data,index)=>{
-                                     
+
                                     return(
                                         <div className='box-shadow-type-two' style={{ width:'50%',height:"90px",marginTop:'10px',display:'flex',flexDirection:'column',borderRadius:'10px'}} onClick={()=>{setDetails(data);setHideButton(data?.workStatus === "Submitted");setWorkId(data?.jobId);setBase64Image([data?.workInfo?.docUrl,data?.workInfo?.docUrl2])}}>
                                                 <div style={{ width:'100%',height:"30px",marginTop:'10px',display:'flex',flexDirection:'column',paddingLeft:'20px'}}>
-                                                    <label style={{fontSize:'20px',fontWeight:'500'}}>{data.workInfo.title}</label>   
+                                                    <label style={{fontSize:'20px',fontWeight:'500'}}>{data.workInfo.title}</label>
                                                 </div>
                                                 <div style={{width:'100%',height:"30px",marginTop:'10px',display:'flex',flexDirection:'row',justifyContent:"space-between",alignItems:'center'}}>
                                                     <label style={{marginLeft:'20px',fontSize:'12px'}}>{data.workInfo.description}</label>
@@ -183,53 +183,53 @@ export default function AllTasks() {
                                                        </div>
 
                                                        <div style={{width:"70%",display:'flex',flexDirection:'row',columnGap:'100px'}}>
-                                                               
+
                                                                      <div style={{width:'100px',display:"flex",alignItems:'center',flexDirection:'column'}}>
-                                                                   
+
                                                                         <div style={{width:'100px',height:'100px',backgroundSize: 'cover',backgroundPosition: 'center', backgroundImage:`url(data:image/png;base64,${details?.workInfo?.docUrl})`,cursor:'pointer'}} onClick={handleDownload}/>
 
-                                                                  
+
                                                                          {details?.workInfo?.docUrl != null ?  <label >Task</label> : ''}
                                                                      </div>
-                                                                
+
                                                                       <div style={{width:'100px',display:"flex",alignItems:'center',flexDirection:'column'}}>
-                                                                   
-                                                                         <div style={{width:'100px',height:'100px',backgroundSize: 'cover',backgroundPosition: 'center', backgroundImage:`url(data:image/png;base64,${details?.workInfo?.docUrl2})`,cursor:'pointer'}} onClick={handleDownload2}/>         
-                                            
+
+                                                                         <div style={{width:'100px',height:'100px',backgroundSize: 'cover',backgroundPosition: 'center', backgroundImage:`url(data:image/png;base64,${details?.workInfo?.docUrl2})`,cursor:'pointer'}} onClick={handleDownload2}/>
+
                                                                          {details?.workInfo?.docUrl2 != null ?  <label>submitted</label> : ''}
                                                                      </div>
                                                        </div>
 
                                                       {details?.employeeName != null && <div style={{display:'felx',flexDirection:'column',alignSelf:'flex-start',margin:'10px',width:"400px"}}>
-                                                               
+
                                                                    <div style={{display:'flex',flexDirection:'row',columnGap:'10px',margin:'10px'}}>
                                                                      <lable>deadline : </lable>
                                                                      <lable>{details?.deadline}</lable>
-                                                                   </div> 
-                                                                
-                                                               
+                                                                   </div>
+
+
                                                                    <div style={{display:'flex',flexDirection:'row',columnGap:'10px',margin:'10px'}}>
                                                                      <lable>submittedDate : </lable>
                                                                      <lable>{details?.submittedDate}</lable>
-                                                                   </div> 
+                                                                   </div>
 
                                                                    <div style={{display:'flex',flexDirection:'row',columnGap:'10px',margin:'10px'}}>
                                                                      <lable>employeeName : </lable>
                                                                      <lable>{details?.employeeName}</lable>
-                                                                   </div> 
+                                                                   </div>
 
                                                                    <div style={{display:'flex',flexDirection:'row',columnGap:'10px',margin:'10px'}}>
                                                                      <lable>jobId  : </lable>
                                                                      <lable>{details?.jobId}</lable>
-                                                                   </div> 
+                                                                   </div>
 
                                                        </div>}
 
                                                  </div>
-                                                <div style={{display:'flex',flexDirection:'column',alignSelf:'flex-end',position:'relative'}}>                 
+                                                <div style={{display:'flex',flexDirection:'column',alignSelf:'flex-end',position:'relative'}}>
                                                                 <div style={{width:'150px',height:'40px',display:'flex',borderRadius:'10px',margin:"10px"}}>
                                                                         <div style={{backgroundColor:'#5037D0',width:'80%',height:'100%',display:'flex',alignItems:'center',justifyContent:'center',borderRightColor:'2px solid #FFFFFF',borderTopLeftRadius:'10px',borderBottomLeftRadius:'10px',cursor:'pointer'}} onClick={()=>{
-                                                                    
+
                                                                             if(hideButton){
                                                                                 setAsRead()
                                                                             }else{
@@ -241,17 +241,17 @@ export default function AllTasks() {
                                                                         <div style={{width:'20%',height:'100%',backgroundColor:'#6149D8',display:'flex',alignItems:'center',justifyContent:'center',cursor:'pointer',borderTopRightRadius:'10px',borderBottomRightRadius:'10px'}} onClick={()=>{setDropDownButtonStatus(prev=>!prev)}}>
                                                                             <Image src={"/images/common/arrowDown.png"} width={20} height={20}/>
                                                                         </div>
-                                                    
+
                                                                 </div>
                                                                     {
-                                                                        dropDownStatus ?   
+                                                                        dropDownStatus ?
                                                                             <div style={{width:'200px',display:'flex',flexDirection:'column',backgroundColor:'#CCC4F0',bottom:'0'}}>
                                                                                 {
                                                                                     status.map((data,index)=>{
-                                                                                
+
                                                                                         return(
-                                                                                            <div style={{border:'2px solid white',height:"20px",display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}} onClick={()=>{ setSelectedStatus(data)  ;setDropDownButtonStatus(prev=>!prev)}}> 
-                                                                                                <label>{data}</label>           
+                                                                                            <div style={{border:'2px solid white',height:"20px",display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center'}} onClick={()=>{ setSelectedStatus(data)  ;setDropDownButtonStatus(prev=>!prev)}}>
+                                                                                                <label>{data}</label>
                                                                                             </div>
                                                                                         )
                                                                                     })
@@ -262,11 +262,11 @@ export default function AllTasks() {
                                                                         : ""
                                                                     }
 
-                                                 </div> 
-                                                
+                                                 </div>
+
 
                                          </div>
-                          
+
 
                        </div>
 
@@ -277,5 +277,5 @@ export default function AllTasks() {
 
       </div>
     )
- 
+
 }
