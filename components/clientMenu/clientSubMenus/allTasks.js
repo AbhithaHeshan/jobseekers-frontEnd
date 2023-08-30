@@ -186,17 +186,16 @@ export default function AllTasks() {
 
                                                                      <div style={{width:'100px',display:"flex",alignItems:'center',flexDirection:'column'}}>
 
-                                                                        <div style={{width:'100px',height:'100px',backgroundSize: 'cover',backgroundPosition: 'center', backgroundImage:`url(data:image/png;base64,${details?.workInfo?.docUrl})`,cursor:'pointer'}} onClick={handleDownload}/>
+                                                                        <div style={{width:'100px',height:'100px',backgroundSize: 'cover',backgroundPosition: 'center', backgroundImage:`url(${details?.workInfo?.docUrl})`,cursor:'pointer'}} onClick={handleDownload}/>
 
-
-                                                                         {details?.workInfo?.docUrl != null ?  <label >Task</label> : ''}
+                                                                         {details?.workInfo?.docUrl != null ? <a href={details?.workInfo?.docUrl} target={"_blank"}> <label style={{color:'blue',cursor:'pointer'}} >view Task</label> </a> : ''}
                                                                      </div>
 
                                                                       <div style={{width:'100px',display:"flex",alignItems:'center',flexDirection:'column'}}>
 
-                                                                         <div style={{width:'100px',height:'100px',backgroundSize: 'cover',backgroundPosition: 'center', backgroundImage:`url(data:image/png;base64,${details?.workInfo?.docUrl2})`,cursor:'pointer'}} onClick={handleDownload2}/>
+                                                                         <div style={{width:'100px',height:'100px',backgroundSize: 'cover',backgroundPosition: 'center', backgroundImage:`url(${details?.workInfo?.docUrl2})`,cursor:'pointer'}} onClick={handleDownload2}/>
 
-                                                                         {details?.workInfo?.docUrl2 != null ?  <label>submitted</label> : ''}
+                                                                         {details?.workInfo?.docUrl2 != null ? <a href={details?.workInfo?.docUrl2} target={"_blank"}> <label  style={{color:'blue',cursor:'pointer'}} > view submitted</label> </a>: ''}
                                                                      </div>
                                                        </div>
 

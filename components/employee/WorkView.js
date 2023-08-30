@@ -9,7 +9,7 @@ import Toaster from "@/components/Toaster";
 
 
 const category = [
-    "new","submitted"
+    "new"
 ]
 
 export default function  WorkView(props){

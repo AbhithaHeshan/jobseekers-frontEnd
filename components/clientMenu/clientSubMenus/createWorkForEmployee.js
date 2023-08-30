@@ -34,6 +34,7 @@ export default function CreateWorks() {
     const [allEmployees,setAllEmployees] = useState([]);
     const [all,setAll] = useState();
     const [selectedUser,setSelectedUser] = useState('');
+    const [extention,setExtention] = useState('');
 
     const fileInputRef3 = useRef(null);
 
@@ -49,6 +50,11 @@ export default function CreateWorks() {
           const fileUrl = URL.createObjectURL(file);
           setDcUrl({value:fileUri,bool:false});
           console.log("URL: ", fileUrl);
+            if (file) {
+                const fileName = file.name;
+                const fileExtension = fileName.split('.').pop();
+                setExtention("."+fileExtension);
+            }
         } catch (err) {
           console.log(err);
         }
@@ -97,7 +103,7 @@ export default function CreateWorks() {
 
         let bodyFormData = new FormData();
         bodyFormData.append("details", JSON.stringify(adDetails));
-        bodyFormData.append("doc" , doc  , ".png");
+        bodyFormData.append("doc" , doc  , extention);
 
         const response = await httpPOST(url,bodyFormData,'multipart/form-data',headers)
 
@@ -271,7 +277,7 @@ export default function CreateWorks() {
                                     ref={fileInputRef3}
                                     type="file"
                                     onChange={handleFileChangeDoc}
-                                    accept="image/png, image/jpeg"
+                                    accept="*"
                                     style={{ display: 'none' }}
                                 />
 
