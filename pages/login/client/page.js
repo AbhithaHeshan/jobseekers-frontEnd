@@ -20,7 +20,6 @@ import Teams from '@/components/clientMenu/Teams';
 import { GenerateTemperaryLinkForFile } from '@/util/fileReader';
 const listData = [
     ["/images/svg/clientMenu/purple/1.svg","/images/svg/clientMenu/white/1.svg","Profile Info"],
-    ["/images/svg/clientMenu/purple/2.svg","/images/svg/clientMenu/white/2.svg","Teams"],
     ["/images/svg/clientMenu/purple/3.svg","/images/svg/clientMenu/white/3.svg","Employees"],
     ["/images/svg/clientMenu/purple/4.svg","/images/svg/clientMenu/white/4.svg","Tasks"],
     ["/images/svg/clientMenu/purple/5.svg","/images/svg/clientMenu/white/5.svg","Advertiestments"],
@@ -34,31 +33,29 @@ const listData = [
   const [isLoading, setLoading] = useState(false)
   const [responseToken, setResponseToken] = useState(false)
   const router = useRouter();
-  
+
   const onChangeView  = (index) =>{
-         
+
 
           switch(index){
                case 0 :
                 return(<ProfileInfo props={clientDetails}/>);break;
                case 1 :
-                return( <Teams/> );break;
-               case 2 : 
                 return(<Employees/>);break;
-               case 3 :
+               case 2 :
                 return(<Tasks/>);break;
-               case 4 : 
+               case 3 :
                 return(<Advertiesment />);break;
                default:'no';
           }
-        
 
-  } 
-  
+
+  }
+
 
   const convertURI =  (imagePath) =>{
 
-   
+
     console.log( GenerateTemperaryLinkForFile(imagePath));
 
   }
@@ -68,7 +65,7 @@ const listData = [
 
 
   useEffect(() => {
-  
+
       async function getClient() {
          setLoading(true);
          const { access_token, refresh_token, userRole, userId } = getUserCredentialsFromLocalStorage();
@@ -78,14 +75,14 @@ const listData = [
           'userId': userId,
           'role': userRole,
          };
-  
+
         console.log(headers, "hdrs");
         const response = await httpGET(BASE_URL + GET_CLIENT, headers);
-       
+
         if (response.status === 200) {
           setLoading(false);
           console.log(response.data, 'vvvvv X');
-          
+
 
           setDetails(response.data);
        // setDetails(response.data);
@@ -97,13 +94,13 @@ const listData = [
               const resStatus =  await generateToken();
               const { access_token, refresh_token, userRole, userId } = getUserCredentialsFromLocalStorage();
               console.log(access_token, '\n', userId, '\n', userRole, '///');
-              
+
               const headers = {
                'Authorization': `Bearer ${access_token}`,
                'userId': userId,
                'role': userRole,
               };
-       
+
              console.log(headers, "hdrs");
              const responseD = await httpGET(BASE_URL + GET_CLIENT, headers);
              console.log(responseD , "/................../");
@@ -115,7 +112,7 @@ const listData = [
       }
 
        getClient();
-    
+
   }, []);
   return (
     <div style={{display:'flex',flexDirection:'column',width:'100vW',height:'100vh',alignItems:'center'}}>
@@ -136,7 +133,7 @@ const listData = [
                 </div>
           </div>
         </div>
-         
+
         <div style={{width:'80vw',height:"95vh",display:'flex',alignItems:'end'}}>
              <div style={{width:'80vw',height:"85vh",display:'flex',flexDirection:'row',columnGap:'50px'}}>
                   <div style={{width:'250px',height:"85vh",display:'felx',flexDirection:'row'}}>
@@ -146,15 +143,15 @@ const listData = [
                                  const isSelected =  index === selectedIndex;
                                return(
                                 <li key={index}>
-                                  <div style={{width:'100%',height:'40px',position:'relative',backgroundColor:'#F2EFFE',cursor:'pointer'}}  
+                                  <div style={{width:'100%',height:'40px',position:'relative',backgroundColor:'#F2EFFE',cursor:'pointer'}}
                                     onClick={(e)=>{ setSelectedIndex(index); setSelectedLabel(data[2])}}
                                   >
                                         <div style={{position:'absolute',left:'0',height:'100%',width:'4px',backgroundColor:'#6149D8',display:isSelected ? 'flex' : 'none'}}/>
                                         <div style={{display:'flex',flexDirection:'row',width:'100%',alignItems:'center',justifyContent:'space-around',height:'100%'}}>
-                                              <Image  src={isSelected ? data[0] : data[1]} width={22} height={8}/> 
+                                              <Image  src={isSelected ? data[0] : data[1]} width={22} height={8}/>
                                               <label style={{color: isSelected ? '#6149D8' : '#97999D',fontFamily:'Inter',fontWeight:'500',fontSize:'14px',width:'100px'}}>{data[2]}</label>
                                         </div>
-                                  </div>       
+                                  </div>
                                 </li>
                                )
                             })
@@ -170,7 +167,7 @@ const listData = [
              </div>
         </div>
 
-         
+
          <Loarder  visible={isLoading} />
          <Toaster/>
 

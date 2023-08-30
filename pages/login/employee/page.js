@@ -17,7 +17,7 @@ import ViewAll from "@/components/employee/viewAll";
  function Main() {
 
 
-  const[visible,setVisible]= useState({visible:false,item:''})
+  const[visible,setVisible]= useState({visible:true,item:''})
   const fileInputRefXT = useRef(null);
   const [profileUrl, setProfileUrl] = useState('')
   const [userDetails,setDetails] = useState({});
@@ -31,8 +31,6 @@ import ViewAll from "@/components/employee/viewAll";
   function onChangeItems(){
     switch(visible.item){
       case "Tasks" : return <ViewAll/>;
-      case "Completed" : return "view all employees of the client have as a teams ex- according to Hotel hotel has waiters,managers,cheff";
-      case "SubmitTask" : return <SubmitTask/>;
       default : "dsd";
     }
   }
@@ -157,14 +155,11 @@ const onChangeProfileImg = (event) => {
                 <div style={{width:'89vw',borderRadius:'10px',margin:'5px'}}>
                      <div style={{height:'100px',display:'flex',flexDirection:'row',columnGap:'10px'}}>
                           <MenuButton  title={"All Tasks"} imageUrl={"/images/common/People.png"} backgroundColor={"#F2EFFE"} onClick={()=>{setVisible({visible:true,item:'Tasks'}); }} />
-                          <MenuButton  title={"Completed Tesks"} imageUrl={"/images/common/People.png"} backgroundColor={"#F2EFFE"} onClick={()=>{setVisible({visible:true,item:'Completed'}); }} />
-                          <MenuButton  title={"Submit Task"} imageUrl={"/images/common/People.png"} backgroundColor={"#F2EFFE"} onClick={()=>{setVisible({visible:true,item:'SubmitTask'});}} />
+
                      </div>
 
-                    <div style={{height:'85%',display:'flex',flexDirection:'row',columnGap:'10px',border:'2px solid red',marginTop:'20px'}}>
-                        {
-                            onChangeItems()
-                        }
+                    <div style={{height:'85%',display:'flex',flexDirection:'row',columnGap:'10px',marginTop:'20px'}}>
+                        <ViewAll/>
                     </div>
 
                 </div>

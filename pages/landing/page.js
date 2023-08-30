@@ -13,7 +13,7 @@ import {notify, notifyStatus} from "@/util/notify";
 
 const nav = [
     ["red", "Find Jobs"],
-    ["green", 'Why Seekers']
+    ["white", 'Why Seekers']
 ]
 
 export default function Landing() {
@@ -69,10 +69,10 @@ export default function Landing() {
                                 nav?.map((data, index) => {
                                     return (
                                         <li key={index} style={{marginLeft: '10px', marginRight: '10px'}}>
-                                            <Dropdown
-                                                label={data[1]}
-                                                color={data[0]}
-                                            />
+                                            {/*<Dropdown*/}
+                                            {/*    label={data[1]}*/}
+                                            {/*    color={data[0]}*/}
+                                            {/*/>*/}
                                         </li>
                                     )
                                 })
@@ -217,7 +217,7 @@ export default function Landing() {
                                         <Button title={"View"} width={"80px"} height={"30px"} color={"white"}
                                                 backgroundColor={"#6149D8"} fontSize={"15px"}
                                                 onClick={() => {
-                                                        
+
                                                    const formdata = {
                                                                       clarification: data?.clarification,
                                                                       description :data?.description,
@@ -232,23 +232,23 @@ export default function Landing() {
                                                                       workingType: data?.workingType
                                                                     }
 
-                                            
+
                                                           router.push({
                                                             pathname: '/applyjobs/view&apply',
                                                             query: formdata,
                                                           });
 
                                                  }}/>
-                                        <Button title={"Apply"} width={"80px"} height={"30px"} color={"white"}
-                                                backgroundColor={"#6149D8"} fontSize={"15px"}
-                                                onClick={() => {
-                                                    if(userCredentialsIsExists()) {
-                                                        console.log("DDDDDDD")
-                                                        router.push('/applyjobs/applicationform')
-                                                    }else {
-                                                        router.push('/signup/page')
-                                                    }
-                                                 }}/>
+                                        {/*<Button title={"Apply"} width={"80px"} height={"30px"} color={"white"}*/}
+                                        {/*        backgroundColor={"#6149D8"} fontSize={"15px"}*/}
+                                        {/*        onClick={() => {*/}
+                                        {/*            if(userCredentialsIsExists()) {*/}
+                                        {/*                console.log("DDDDDDD")*/}
+                                        {/*                router.push('/applyjobs/applicationform')*/}
+                                        {/*            }else {*/}
+                                        {/*                router.push('/signup/page')*/}
+                                        {/*            }*/}
+                                        {/*         }}/>*/}
                                     </div>
 
                                 </div>

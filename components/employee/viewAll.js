@@ -7,11 +7,14 @@ import {BASE_URL} from "@/service/network-configs/http/basicConfig";
 import {GET_SPECIFIC_CLIENTS, GET_WORKKS_BY} from "@/service/api-endpoints/works";
 import {notify, notifyStatus} from "@/util/notify";
 import Button from "@/components/button";
+import WorkView from "@/components/employee/WorkView";
 
 
 export default function ViewAll() {
 
         const[companyDetails,setCompanyDetails] = useState([]);
+        const[modalVisible,setModalVisible] = useState(false);
+        const[clientId,setClientId] = useState("");
     async function  getAllClients(){
 
         const { access_token, refresh_token, userRole, userId }  = getUserCredentialsFromLocalStorage();
@@ -35,28 +38,31 @@ export default function ViewAll() {
     },[])
 
     return(
-        <div style={{width:"inherit",height:'inherit'}}>
-            <div style={{display:'flex',flexDirection:'row',flexWrap:'nowrap',padding:'20px'}}>
-                  <div className="box-shadow-type-two" style={{width:'250px',height:'300px',borderRadius:'10px',display:'flex',alignItems:'center',padding:'10px',flexDirection:'column'}}>
-                      <div style={{width:'80px',display:'flex',alignItems:'center',flexDirection:'column'}}>
-                          <div style={{width:'80px',height:'80px',borderRadius:'100%',backgroundImage:`url(${companyDetails[0]?.profileImageUri})`}}/>
-                          <label>{companyDetails[0]?.businessName }</label>
-                      </div>
+        <div style={{width:"inherit",height:'inherit',position:'relative'}}>
+             <div style={{display:'flex',flexDirection:'row',flexWrap:'nowrap',padding:'20px'}}>
+                 {companyDetails.map((company,index) => {
 
-                      <div style={{display:'flex',flexDirection:'column',margin:'10px'}}>
-                          <label>owner :{companyDetails[0]?.owner}</label>
-                          <label>email :{companyDetails[0]?.owner}</label>
-                          <label>tel :{companyDetails[0]?.owner}</label>
-                      </div>
+                     return(
+                             <div className="box-shadow-type-two" style={{width:'250px',height:'300px',borderRadius:'10px',display:'flex',alignItems:'center',padding:'10px',flexDirection:'column'}}>
+                              <div style={{width:'80px',display:'flex',alignItems:'center',flexDirection:'column'}}>
+                                  <div style={{width:'80px',height:'80px',borderRadius:'100%',backgroundImage:`url(${company?.profileImageUri})`}}/>
+                                  <label>{company?.businessName }</label>
+                              </div>
 
-                      <div  style={{margin:'10px'}}>
-                          <Button title={"View"} width={"100px"} height={"35px"} color={"white"} backgroundColor={"#6149D8"} onClick={()=>{}} />
-                      </div>
+                              <div style={{display:'flex',flexDirection:'column',margin:'10px'}}>
+                                  <label>owner :{company?.owner}</label>
+                                  <label>email :{company?.owner}</label>
+                                  <label>tel   :{company?.owner}</label>
+                              </div>
 
-
-                  </div>
+                              <div  style={{margin:'10px'}}>
+                                  <Button title={"View"} width={"100px"} height={"35px"} color={"white"} backgroundColor={"#6149D8"} onClick={()=>{setModalVisible(prev => ! prev);setClientId(company?.clientId)}} />
+                              </div>
+                          </div>
+                     )
+                 })}
             </div>
-
+            {modalVisible && <WorkView clientId={clientId} visible={modalVisible} onClick={(e)=>{setModalVisible(e)}}/>}
         </div>
     );
 

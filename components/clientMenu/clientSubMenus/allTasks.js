@@ -257,7 +257,6 @@ export default function AllTasks() {
                                                                                     })
                                                                                 }
 
-
                                                                             </div>
                                                                         : ""
                                                                     }
